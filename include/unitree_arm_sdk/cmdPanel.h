@@ -77,7 +77,7 @@ public:
     void setDt(double dt);
     double getValue();
     double getDValue();
-    double setValue(double value){_value = value;}
+    void setValue(double value){_value = value;}
 private:
     double _value;
     double _changeDirection;
@@ -112,6 +112,7 @@ public:
     virtual SendCmd getSendCmd();
     virtual void getRecvState(RecvState recvState);
 
+    bool isDisConnect;
 protected:
     virtual void _read() = 0;
     void _start();
@@ -119,9 +120,6 @@ protected:
     void _updateState();
     void _pressKeyboard();
     void _releaseKeyboard();
-
-    static void* _runStatic(void* obj);
-    static void* _readStatic(void* obj);
 
     LoopFunc *_runThread;
     LoopFunc *_readThread;

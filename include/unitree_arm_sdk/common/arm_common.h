@@ -20,6 +20,7 @@ enum class ArmFSMState{
     TEACH,
     TEACHREPEAT,
     CALIBRATION,
+    SETTRAJ,
     DANCE00,
     DANCE01,
     DANCE02,
@@ -50,6 +51,13 @@ enum class ArmFSMValue{
     UP
 };
 
+enum class TrajType{
+    MoveJ,
+    MoveL,
+    MoveC,
+    Stop
+};
+
 // 20 Byte
 struct JointCmd{
     float T;
@@ -61,55 +69,51 @@ struct JointCmd{
 
 // 16 Byte
 struct JointState{
+    float buf[0];
     float T;
     float W;
     float Acc;
     float Pos;
 };
 
-// 140 Byte
 union UDPSendCmd{
     uint8_t checkCmd;
     JointCmd jointCmd[7];
 };
 
+
 // 16*7=112 Byte
 union UDPRecvState{
-    uint8_t singleState;
-    uint8_t selfCheck[10];
     JointState jointState[7];
     uint8_t errorCheck[16];
 };
 
+
 // 24 Byte
 struct Posture{
-    float roll;
-    float pitch;
-    float yaw;
-    float x;
-    float y;
-    float z;
+    double roll;
+    double pitch;
+    double yaw;
+    double x;
+    double y;
+    double z;
 };
 
-// 48 Byte
-struct MoveC{
-    Posture middlePosture;
-    Posture endPosture;
+struct TrajCmd{
+    TrajType trajType;
+    Posture posture[2];
+    double gripperPos;
+    double maxSpeed;
+    double stopTime;
+    int trajOrder;
 };
 
-// 20*7=140 Byte
 union ValueUnion{
-    Posture moveJ;
-    Posture moveL;
-    Posture moveC[2];
-    char teach[10];
-    char teachRepeat[10];
-    char saveState[10];
-    char toState[10];
+    char name[10];
     JointCmd jointCmd[7];
+    TrajCmd trajCmd;
 };
 
-// 2+4+4+140 = 150 Byte
 struct SendCmd{
     uint8_t head[2];
     ArmFSMState state;
@@ -117,7 +121,6 @@ struct SendCmd{
     ValueUnion valueUnion;
 };
 
-// 2+4+112+24 = 142 Byte
 struct RecvState{
     uint8_t head[2];
     ArmFSMState state;

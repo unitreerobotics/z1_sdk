@@ -10,6 +10,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <termios.h>
+#include "unitree_arm_sdk/timer.h"
 
 #include "unitree_arm_sdk/common/arm_motor_common.h"
 
@@ -29,11 +30,13 @@ public:
     virtual size_t recv(uint8_t *recvMsg) = 0;
     virtual bool sendRecv(std::vector<MOTOR_send> &sendVec, std::vector<MOTOR_recv> &recvVec) = 0;
     void resetIO(BlockYN blockYN, size_t recvLength, size_t timeOutUs);
+    bool isDisConnect;
 protected:
     BlockYN _blockYN = BlockYN::NO;
     size_t _recvLength;
     timeval _timeout;
     timeval _timeoutSaved;
+    uint16_t _isDisConnectCnt;
 };
 
 

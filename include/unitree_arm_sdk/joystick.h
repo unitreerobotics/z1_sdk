@@ -4,8 +4,16 @@
 #include <vector>
 #include "unitree_arm_sdk/udp.h"
 #include "unitree_arm_sdk/cmdPanel.h"
-#include "unitree_arm_sdk/common/quadruped_common.h"
 #include "unitree_arm_sdk/common/joystick_common.h"
+
+#define CTRL_BY_ALIENGO_JOYSTICK
+
+#ifdef CTRL_BY_ALIENGO_JOYSTICK
+#include "unitree_arm_sdk/common/aliengo_common.h"
+#else
+#include "unitree_arm_sdk/common/b1_common.h"
+#endif
+
 
 using namespace UNITREE_LEGGED_SDK;
 

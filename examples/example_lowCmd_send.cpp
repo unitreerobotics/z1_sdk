@@ -21,7 +21,7 @@ struct SimulationPD : ConfigPD{
         K_P[4] = 15;
         K_P[5] = 15;
         K_P[6] = 15;
-
+        
         K_W[0] = 5;
         K_W[1] = 10;
         K_W[2] = 10;
