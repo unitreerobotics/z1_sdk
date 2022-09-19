@@ -13,6 +13,7 @@ namespace UNITREE_LEGGED_SDK
 
 #pragma pack(1)
 
+	// 12 bytes
 	typedef struct
 	{
 		float x;
@@ -20,6 +21,7 @@ namespace UNITREE_LEGGED_SDK
 		float z;
 	} Cartesian;
 
+	// 53 bytes
 	typedef struct
 	{
 		float quaternion[4];               // quaternion, normalized, (w,x,y,z)
@@ -29,6 +31,7 @@ namespace UNITREE_LEGGED_SDK
 		int8_t temperature;
 	} IMU;                                 // when under accelerated motion, the attitude of the robot calculated by IMU will drift.
 
+	// 3 bytes
 	typedef struct
 	{
 		uint8_t r;
@@ -36,6 +39,7 @@ namespace UNITREE_LEGGED_SDK
 		uint8_t b;
 	} LED;                                 // foot led brightness: 0~255
 
+	// 38 bytes
 	typedef struct
 	{
 		uint8_t mode;                      // motor working mode 
@@ -50,6 +54,7 @@ namespace UNITREE_LEGGED_SDK
         uint32_t reserve[2];   // in reserve[1] returns the brake state.
 	} MotorState;                          // motor feedback
 
+	// 33 bytes
 	typedef struct
 	{
 		uint8_t mode;                      // desired working mode
@@ -61,6 +66,7 @@ namespace UNITREE_LEGGED_SDK
         uint32_t reserve[3]; // in reserve[0] sends the brake cmd.
 	} MotorCmd;                            // motor control
 
+	// 891 bytes
 	typedef struct
 	{
 		uint8_t levelFlag;                 // flag to distinguish high level or low level
@@ -78,6 +84,7 @@ namespace UNITREE_LEGGED_SDK
 		uint32_t crc;
 	} LowState;                            // low level feedback
 
+	// 730 bytes
 	typedef struct 
 	{
 		uint8_t levelFlag;
@@ -92,6 +99,7 @@ namespace UNITREE_LEGGED_SDK
 		uint32_t crc;
 	} LowCmd;                              // low level control
 
+	// 244byte
 	typedef struct
 	{
         uint8_t levelFlag;
@@ -112,6 +120,7 @@ namespace UNITREE_LEGGED_SDK
         uint32_t crc;
 	} HighState;                           // high level feedback
 
+	//113byte
 	typedef struct
 	{
         uint8_t levelFlag;

@@ -69,13 +69,13 @@ struct JointCmd{
 
 // 16 Byte
 struct JointState{
-    float buf[0];
     float T;
     float W;
     float Acc;
     float Pos;
 };
 
+//140bytes
 union UDPSendCmd{
     uint8_t checkCmd;
     JointCmd jointCmd[7];
@@ -88,8 +88,6 @@ union UDPRecvState{
     uint8_t errorCheck[16];
 };
 
-
-// 24 Byte
 struct Posture{
     double roll;
     double pitch;
@@ -118,6 +116,7 @@ struct SendCmd{
     uint8_t head[2];
     ArmFSMState state;
     ArmFSMValue value;
+    bool track;// whether let arm track jointCmd in State_JOINTCTRL or posture[0] in State_CARTESIAN
     ValueUnion valueUnion;
 };
 

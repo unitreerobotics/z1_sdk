@@ -3,8 +3,10 @@
 // constructor
 // since the SDK communicates with z1_ctrl, the udp is set to the loopback address by default
 unitreeArm::unitreeArm():_udp("127.0.0.1", 8071, 8072, sizeof(RecvState), BlockYN::NO, 500000) {
+    _sendCmd = {0};
     _sendCmd.head[0] = 0xFE;
     _sendCmd.head[1] = 0xFF;
+    _sendCmd.track = false;
 
     _udpThread = new LoopFunc("udp", 0.004, boost::bind(&unitreeArm::UDPSendRecv, this));
     _udpThread->start();
@@ -15,7 +17,7 @@ unitreeArm::~unitreeArm() {
 }
 
 // udp send and receive function
-// it has created a thread in the constructor that used to automatically process the arm state and command datas
+// It has created a thread in the constructor that used to automatically process the arm state and command datas
 void unitreeArm::UDPSendRecv() {
     _udp.send((uint8_t*)&_sendCmd, sizeof(SendCmd));
     _udp.recv((uint8_t*)&_recvState, sizeof(RecvState));
@@ -34,6 +36,7 @@ void unitreeArm::backToStart() {
     setFsm(ArmFSMState::BACKTOSTART);
     //for those states that automatically transion to the joint space state, it's recommmanded to wait for it to finish
     _sendCmd.state = ArmFSMState::INVALID;
+
     while (_recvState.state != ArmFSMState::JOINTCTRL){
         usleep(deltaTime);
     }
@@ -79,7 +82,7 @@ void unitreeArm::MoveJ(Vec6 moveJCmd) {
 
 // reach the target posture by directly moving the joint
 void unitreeArm::MoveJ(Vec6 moveJCmd, double gripperPos) {
-    _sendCmd.valueUnion.jointCmd[6].Pos = gripperPos;
+    _sendCmd.valueUnion.trajCmd.gripperPos = gripperPos;
     MoveJ(moveJCmd);
 }
 

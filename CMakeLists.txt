@@ -11,9 +11,10 @@ include_directories(
 
 link_directories(lib)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -pthread")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)                  # SHARED:CMAKE_LIBRARY_OUTPUT_DIRECTORY   STATIC:CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+add_library(Z1_SDK_Linux64 SHARED ${ADD_SRC_LIST})
 
-add_executable(example_lowCmd_send examples/example_lowCmd_send.cpp)
+add_executable(example_lowCmd_send examples/example_lowCmd_send.cpp )
 target_link_libraries(example_lowCmd_send Z1_SDK_Linux64)
 
 add_executable(example_keyboard_send examples/example_keyboard_send.cpp)
@@ -22,5 +23,5 @@ target_link_libraries(example_keyboard_send Z1_SDK_Linux64)
 add_executable(bigDemo examples/bigDemo.cpp)
 target_link_libraries(bigDemo Z1_SDK_Linux64)
 
-add_executable(getJointGripperState examples/getJointGripperState.cpp)
+add_executable(getJointGripperState examples/getJointGripperState.cpp )
 target_link_libraries(getJointGripperState Z1_SDK_Linux64)

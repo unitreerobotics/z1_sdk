@@ -23,7 +23,9 @@ public:
         EmptyAction emptyAction, size_t channelNum = 1,
         double dt = 0.002);
     ~UnitreeJoystick();
+    SendCmd getSendCmd(){return _sendCmd;};
 private:
+    SendCmd _sendCmd;
     void _read();
     void _extractCmd();
 
