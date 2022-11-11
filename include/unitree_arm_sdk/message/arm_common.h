@@ -21,34 +21,9 @@ enum class ArmFSMState{
     TEACHREPEAT,
     CALIBRATION,
     SETTRAJ,
-    DANCE00,
-    DANCE01,
-    DANCE02,
-    DANCE03,
-    DANCE04,
-    DANCE05,
-    DANCE06,
-    DANCE07,
-    DANCE08,
-    DANCE09,
     BACKTOSTART,
-    GRIPPER_OPEN,
-    GRIPPER_CLOSE,
     NEXT,
     LOWCMD
-};
-
-// 4 Byte
-enum class ArmFSMValue{
-    INVALID,
-    Q,A,
-    W,S,  
-    E,D,
-    R,F,
-    T,G, 
-    Y,H,   
-    DOWN,
-    UP
 };
 
 enum class TrajType{
@@ -67,25 +42,29 @@ struct JointCmd{
     float K_W;
 };
 
-// 16 Byte
+typedef struct{
+    uint8_t reserved : 6 ;
+    uint8_t state    : 2 ;//whether motor is connected; 0-ok, 1-disconnected, 2-CRC error
+}Motor_Connected;
+
+typedef struct{
+    int8_t temperature;
+    /* 0x01: phase current is too large
+     * 0x02: phase leakage
+     * 0x04: overheat(including the motor windings and the motor shell)
+     * 0x20: jumped
+     * 0x40: nothing
+     */
+    uint8_t error;
+    Motor_Connected isConnected;
+}Motor_State;
+
 struct JointState{
     float T;
     float W;
     float Acc;
     float Pos;
-};
-
-//140bytes
-union UDPSendCmd{
-    uint8_t checkCmd;
-    JointCmd jointCmd[7];
-};
-
-
-// 16*7=112 Byte
-union UDPRecvState{
-    JointState jointState[7];
-    uint8_t errorCheck[16];
+    Motor_State state[2];
 };
 
 struct Posture{
@@ -115,10 +94,10 @@ union ValueUnion{
 struct SendCmd{
     uint8_t head[2];
     ArmFSMState state;
-    ArmFSMValue value;
     bool track;// whether let arm track jointCmd in State_JOINTCTRL or posture[0] in State_CARTESIAN
     ValueUnion valueUnion;
 };
+
 
 struct RecvState{
     uint8_t head[2];
@@ -126,6 +105,11 @@ struct RecvState{
     JointState jointState[7];
     Posture cartesianState;
 };
+
+constexpr int SENDCMD_LENGTH    = (sizeof(SendCmd));
+constexpr int RECVSTATE_LENGTH  = (sizeof(RecvState));
+constexpr int JointCmd_LENGTH   = (sizeof(JointCmd));
+constexpr int JointState_LENGTH = (sizeof(JointState));
 
 #pragma pack()
 

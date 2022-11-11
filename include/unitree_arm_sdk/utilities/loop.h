@@ -10,8 +10,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
+#include "utilities/timer.h"
 
-#include "unitree_arm_sdk/timer.h"
 
 // constexpr int THREAD_PRIORITY    = 99;   // real-time priority
 

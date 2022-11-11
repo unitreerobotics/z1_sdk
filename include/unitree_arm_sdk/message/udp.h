@@ -1,23 +1,18 @@
-#ifndef _UNITREE_ARM_UDP_H_
-#define _UNITREE_ARM_UDP_H_
+#ifndef _UDP_H
+#define _UDP_H
 
-#include <stdint.h>
-#include <unistd.h>
-#include <vector>
 #include <arpa/inet.h>
+#include <termios.h>
 #include <string>
 #include <string.h>
-#include <iostream>
-#include <unistd.h>
-#include <termios.h>
-#include "unitree_arm_sdk/timer.h"
-
-#include "unitree_arm_sdk/common/arm_motor_common.h"
+#include <vector>
+#include "utilities/timer.h"
 
 enum class BlockYN{
     YES,
     NO
 };
+
 
 class IOPort{
 public:
@@ -28,7 +23,6 @@ public:
     virtual size_t send(uint8_t *sendMsg, size_t sendLength) = 0;
     virtual size_t recv(uint8_t *recvMsg, size_t recvLength) = 0;
     virtual size_t recv(uint8_t *recvMsg) = 0;
-    virtual bool sendRecv(std::vector<MOTOR_send> &sendVec, std::vector<MOTOR_recv> &recvVec) = 0;
     void resetIO(BlockYN blockYN, size_t recvLength, size_t timeOutUs);
     bool isDisConnect;
 protected:
@@ -50,7 +44,6 @@ public:
     size_t send(uint8_t *sendMsg, size_t sendMsgLength);
     size_t recv(uint8_t *recvMsg, size_t recvLength);
     size_t recv(uint8_t *recvMsg);
-    bool sendRecv(std::vector<MOTOR_send> &sendVec, std::vector<MOTOR_recv> &recvVec);
 private:
     size_t _recvBlock(uint8_t *recvMsg, size_t recvLength);
     size_t _recvUnBlock(uint8_t *recvMsg, size_t recvLength);
@@ -59,11 +52,9 @@ private:
     int _sockfd;
     int _on = 1;
     size_t _sentLength;
-
-    uint8_t _sendBytes[238];    // 7 motors
-    uint8_t _recvBytes[546];   // 7 motors
-
     fd_set _rSet;
 };
 
-#endif  // _UNITREE_ARM_UDP_H_
+
+
+#endif
