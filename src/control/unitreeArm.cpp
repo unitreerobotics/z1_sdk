@@ -27,6 +27,7 @@ void unitreeArm::setFsm(ArmFSMState fsm){
 
 void unitreeArm::backToStart(){
     setFsm(ArmFSMState::BACKTOSTART);
+    _ctrlComp->sendCmd.track = false;
     while (_ctrlComp->recvState.state != ArmFSMState::JOINTCTRL){
         usleep(_ctrlComp->dt * 1000000);
     }
