@@ -10,11 +10,6 @@ include_directories(
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
 
-file(GLOB_RECURSE ADD_SRC_LIST
-    src/*/*.cpp
-)
-add_library(Z1_SDK_Linux64 SHARED ${ADD_SRC_LIST})
-
 link_directories(lib)
 
 add_executable(bigDemo examples/bigDemo.cpp )
@@ -23,7 +18,5 @@ add_executable(example_lowCmd_send examples/example_lowCmd_send.cpp )
 target_link_libraries(example_lowCmd_send Z1_SDK_Linux64)
 add_executable(example_CtrlByFSM examples/example_CtrlByFSM.cpp )
 target_link_libraries(example_CtrlByFSM Z1_SDK_Linux64)
-add_executable(example_CtrlByTraj examples/example_CtrlByTraj.cpp )
-target_link_libraries(example_CtrlByTraj Z1_SDK_Linux64)
 add_executable(example_JointCtrl examples/example_JointCtrl.cpp )
 target_link_libraries(example_JointCtrl Z1_SDK_Linux64)

@@ -23,7 +23,18 @@ public:
     std::vector<double> tau;
 
     std::vector<int> temperature;
+    /* 0x01 : phase current is too large
+     * 0x02 : phase leakage
+     * 0x04 : motor winding overheat or temperature is too large
+     * 0x20 : parameters jump
+     * 0x40 : Ignore
+     */
     std::vector<uint8_t> errorstate;
+    /*
+     * 0: OK
+     * 1: communication between lower computer and motor disconnect once
+     * 2: communication between lower computer and motor has CRC erro once
+     */
     std::vector<uint8_t> isMotorConnected;
 
     Vec6 getQ();

@@ -2,13 +2,14 @@
 
 class Z1ARM : public unitreeArm{
 public:
-    Z1ARM(CtrlComponents * ctrlComp):unitreeArm(ctrlComp){};
+    Z1ARM():unitreeArm(true){};
     ~Z1ARM(){};
     void armCtrlByFSM();
-    void armCtrlByTraj();
     void armCtrlTrackInJointCtrl();
     void armCtrlTrackInCartesian();
     void printState();
+private:
+    Vec6 qPast;
 };
 
  
@@ -35,73 +36,13 @@ void Z1ARM::armCtrlByFSM() {
     MoveC(posture[0], posture[1], -M_PI/3.0, 0.3);
 }
 
-void Z1ARM::armCtrlByTraj(){
-    Vec6 posture[2];
-    int order = 1;
-
-    labelRun("forward");
-
-    _trajCmd.trajOrder = 0;//if order == 0, clear traj
-    setTraj();
-
-    // No.1 trajectory
-    _trajCmd.trajOrder = order++;
-    _trajCmd.trajType = TrajType::MoveJ;
-    _trajCmd.maxSpeed = 1.0;// angular velocity, rad/s
-    _trajCmd.gripperPos = 0.0;
-    posture[0] << 0.5,0.1,0.1,0.5,-0.2,0.5;
-    _trajCmd.posture[0] = Vec6toPosture(posture[0]);
-    setTraj();
-
-    // No.2 trajectory
-    _trajCmd.trajOrder = order++;
-    _trajCmd.trajType = TrajType::Stop;
-    _trajCmd.stopTime = 1.0;
-    _trajCmd.gripperPos = -1.0;
-    setTraj();
-
-
-    // No.3 trajectory
-    _trajCmd.trajOrder = order++;
-    _trajCmd.trajType = TrajType::MoveL;
-    _trajCmd.maxSpeed = 0.3; // Cartesian velocity , m/s
-    _trajCmd.gripperPos = 0.0;
-    posture[0] << 0,0,0,0.45,-0.2,0.2;
-    _trajCmd.posture[0] = Vec6toPosture(posture[0]);
-    setTraj();
-
-    // No.4 trajectory
-    _trajCmd.trajOrder = order++;
-    _trajCmd.trajType = TrajType::Stop;
-    _trajCmd.stopTime = 1.0; 
-    _trajCmd.gripperPos = -1.0;
-    setTraj();
-
-    // No.5 trajectory
-    _trajCmd.trajOrder = order++;
-    _trajCmd.trajType = TrajType::MoveC;
-    _trajCmd.maxSpeed = 0.3; // Cartesian velocity
-    _trajCmd.gripperPos = 0.0;
-    posture[0] << 0,0,0,0.45,0,0.4;
-    posture[1] << 0,0,0,0.45,0.2,0.2;
-    _trajCmd.posture[0] = Vec6toPosture(posture[0]);
-    _trajCmd.posture[1] = Vec6toPosture(posture[1]);
-    setTraj();
-
-    startTraj();
-    // wait for trajectory completion
-    while (_ctrlComp->recvState.state != ArmFSMState::JOINTCTRL){
-        usleep(_ctrlComp->dt*1000000);
-    }
-}
-
 void Z1ARM::armCtrlTrackInJointCtrl(){
     labelRun("forward");
     startTrack(ArmFSMState::JOINTCTRL);
     for(;;){
         q(3) -= _ctrlComp->dt * 1.0;//max dt*PI, rad/s
 
-        qPast = _ctrlComp->lowstate->getQ();
+        qPast = lowstate->getQ();
         // std::cout << "qCmd: " << q.transpose() << " qState: " << qPast.transpose() << std::endl;
         //The joint has reached limit, there is warning: joint cmd is far from state
         double error = fabs(q(3) - qPast(3));
@@ -117,11 +58,11 @@ void Z1ARM::armCtrlTrackInCartesian(){
     labelRun("forward");
     startTrack(ArmFSMState::CARTESIAN);
     for(;;){
-        _ctrlComp->lowcmd->endPosture(5) -= _ctrlComp->dt * 0.2;//z, m/s
+        endPosture(5) -= _ctrlComp->dt * 0.2;//z axis, m/s
 
         // no inverse kinematics solution, the joint has reached limit
-        // std::cout << "postureCmd: " << _ctrlComp->lowcmd->endPosture.transpose() << " qState: " << _ctrlComp->lowstate->endPosture.transpose() << std::endl;
-        double error = fabs(_ctrlComp->lowcmd->endPosture(5) - _ctrlComp->lowstate->endPosture(5));
+        std::cout << "postureCmd: " << endPosture.transpose() << " qState: " << lowstate->endPosture.transpose() << std::endl;
+        double error = fabs(endPosture(5) - lowstate->endPosture(5));
         if( error > 0.1){
             break;
         }
@@ -132,37 +73,33 @@ void Z1ARM::armCtrlTrackInCartesian(){
 
 void Z1ARM::printState(){
     std::cout<<"------ joint State ------"<<std::endl;
-    std::cout<<"qState: "<<_ctrlComp->lowstate->getQ().transpose()<<std::endl;
-    std::cout<<"qdState: "<<_ctrlComp->lowstate->getQd().transpose()<<std::endl;
-    std::cout<<"tauState: "<<_ctrlComp->lowstate->getTau().transpose()<<std::endl;
+    std::cout<<"qState: "<<lowstate->getQ().transpose()<<std::endl;
+    std::cout<<"qdState: "<<lowstate->getQd().transpose()<<std::endl;
+    std::cout<<"tauState: "<<lowstate->getTau().transpose()<<std::endl;
 
     std::cout<<"------ Endeffector Cartesian Posture ------"<<std::endl;
     std::cout<<"roll pitch yaw x y z"<<std::endl;
-    std::cout<<_ctrlComp->lowstate->endPosture.transpose()<<std::endl;
+    std::cout<<lowstate->endPosture.transpose()<<std::endl;
 }
 
 int main() {
-    CtrlComponents *ctrlComp = new CtrlComponents(0.002);
-    Z1ARM arm(ctrlComp);
+    std::cout << std::fixed << std::setprecision(3);
+    Z1ARM arm;
     arm.sendRecvThread->start();
 
     arm.backToStart();
 
-    // size_t demo = 2;
-    for(size_t demo = 1; demo < 5; demo++)
-    // for(;;)
+    // size_t demo = 3;
+    for(size_t demo = 1; demo < 4; demo++)
     switch (demo)
     {
         case 1:
             arm.armCtrlByFSM();
             break;
         case 2:
-            arm.armCtrlByTraj();
-            break;
-        case 3:
             arm.armCtrlTrackInJointCtrl();
             break;
-        case 4:
+        case 3:
             arm.armCtrlTrackInCartesian();
             break;
         default:
@@ -172,6 +109,5 @@ int main() {
     arm.backToStart();
     arm.setFsm(ArmFSMState::PASSIVE);
     arm.sendRecvThread->shutdown();
-    delete ctrlComp;
     return 0;
 }

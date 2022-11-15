@@ -23,20 +23,17 @@ public:
     }
     bool getJointCmd(Vec6& q, Vec6& qd, double& gripperQ, double& gripperQd){
         _runTime();
-
         if(!_reached){
             _s = _a3*pow(_tCost,3) + _a4*pow(_tCost,4) + _a5*pow(_tCost,5);
             _sDot = 3*_a3*pow(_tCost,2) + 4*_a4*pow(_tCost,3) + 5*_a5*pow(_tCost,4);
             q = _startQ + _s*(_endQ - _startQ);
             qd = _sDot * (_endQ - _startQ);
-
             gripperQ  = _gripperStartQ + (_gripperEndQ-_gripperStartQ)*_s;
             gripperQd = (_gripperEndQ-_gripperStartQ) * _sDot;
         }else{
             q = _endQ;
             qd.setZero();
         }
-
         return _reached;
     }
 private:
@@ -62,7 +59,7 @@ private:
         _tCost = (_tCost>_pathTime) ? _pathTime : _tCost;
     }
     void _generateA345(){
-        if(_pathTime == 0){
+        if(NearZero(_pathTime)){
             _a3 = 0;
             _a4 = 0;
             _a5 = 0;
@@ -77,8 +74,8 @@ private:
 
 class Z1ARM : public unitreeArm{
 public:
-    Z1ARM(CtrlComponents * ctrlComp):unitreeArm(ctrlComp){
-        myThread = new LoopFunc("Z1Communication", _ctrlComp->dt, boost::bind(&Z1ARM::run, this));
+    Z1ARM():unitreeArm(true){
+        myThread = new LoopFunc("Z1Communication", 0.002, boost::bind(&Z1ARM::run, this));
     };
     ~Z1ARM(){delete myThread;};
     void setJointTraj(Vec6 startQ,Vec6 endQ, double speed){
@@ -101,8 +98,7 @@ public:
 
 int main(){
     std::cout << std::fixed << std::setprecision(3);
-    CtrlComponents *ctrlComp = new CtrlComponents(0.002);
-    Z1ARM arm(ctrlComp);
+    Z1ARM arm;
     arm.myThread->start();
 
     Vec6 forward;
@@ -119,6 +115,5 @@ int main(){
     arm.backToStart();
     arm.setFsm(ArmFSMState::PASSIVE);
     arm.myThread->shutdown();
-    delete ctrlComp;
     return 0;
 }

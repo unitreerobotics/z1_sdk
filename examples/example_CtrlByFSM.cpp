@@ -2,8 +2,7 @@
 
 int main() {
     Vec6 posture[2];
-    CtrlComponents *ctrlComp = new CtrlComponents(0.002);
-    unitreeArm arm(ctrlComp);
+    unitreeArm arm(true);
     arm.sendRecvThread->start();
 
     arm.backToStart();
@@ -32,6 +31,5 @@ int main() {
     arm.backToStart();
     arm.setFsm(ArmFSMState::PASSIVE);
     arm.sendRecvThread->shutdown();
-    delete ctrlComp;
     return 0;
 }

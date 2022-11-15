@@ -12,9 +12,6 @@
 #include <boost/bind.hpp>
 #include "utilities/timer.h"
 
-
-// constexpr int THREAD_PRIORITY    = 99;   // real-time priority
-
 typedef boost::function<void ()> Callback;
 
 class Loop {
@@ -43,6 +40,12 @@ private:
 
 class LoopFunc : public Loop {
 public:
+/*
+ * Function: create a thead run once every period
+ * Input: name: indicate what the thread aims to
+ *        period : time, unit: second
+ *        _cb : the function pointer
+ */
   LoopFunc(std::string name, float period, const Callback& _cb)
     : Loop(name, period), _fp(_cb){}
   LoopFunc(std::string name, float period, int bindCPU, const Callback& _cb)

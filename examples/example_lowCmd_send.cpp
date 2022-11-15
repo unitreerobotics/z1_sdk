@@ -2,8 +2,8 @@
 
 class Z1ARM : public unitreeArm{
 public:
-    Z1ARM(CtrlComponents * ctrlComp):unitreeArm(ctrlComp){
-        runThread = new LoopFunc("Z1LowCmd", _ctrlComp->dt, boost::bind(&Z1ARM::run, this));
+    Z1ARM():unitreeArm(true){
+        runThread = new LoopFunc("Z1LowCmd", 0.002, boost::bind(&Z1ARM::run, this));
     };
     ~Z1ARM(){delete runThread;};
     void run();
@@ -23,12 +23,15 @@ void Z1ARM::run(){
     qd(5) = direction*1.5;// velocity
     // gripper, if arm doesn't has gripper, it does noting.
     gripperQ -= direction*_ctrlComp->dt*velocity;
+    Vec6 gTemp = _ctrlComp->armModel->inverseDynamics(q, qd, Vec6::Zero(), Vec6::Zero());
+    gTemp(0) = tau(0);
+    tau = gTemp;
     sendRecv();
 }
 
 int main(int argc, char *argv[]) {
-    CtrlComponents *ctrlComp = new CtrlComponents(0.002);
-    Z1ARM arm(ctrlComp);
+    std::cout << std::fixed << std::setprecision(3);
+    Z1ARM arm;
     arm.sendRecvThread->start();
 
     arm.backToStart();
@@ -51,6 +54,8 @@ int main(int argc, char *argv[]) {
     arm.runThread->start();// using runThread instead of sendRecvThread
 
     for(int i(0); i<1000; i++){
+        // The robot arm will have vibration due to the rigid impact of the speed
+        // when the direction changes
         arm.direction = i < 600 ? 1. : -1.;
         usleep(arm._ctrlComp->dt*1000000);
     }
@@ -58,9 +63,9 @@ int main(int argc, char *argv[]) {
     arm.runThread->shutdown();
     arm.sendRecvThread->start();
 
+    arm.setFsm(ArmFSMState::JOINTCTRL);
     arm.backToStart();
     arm.setFsm(ArmFSMState::PASSIVE);
     arm.sendRecvThread->shutdown();
-    delete ctrlComp;
     return 0;
 }

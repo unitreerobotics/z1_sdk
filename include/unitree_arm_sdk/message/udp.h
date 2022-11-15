@@ -13,7 +13,6 @@ enum class BlockYN{
     NO
 };
 
-
 class IOPort{
 public:
     IOPort(BlockYN blockYN, size_t recvLength, size_t timeOutUs){
