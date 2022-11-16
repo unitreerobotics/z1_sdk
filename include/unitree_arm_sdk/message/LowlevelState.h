@@ -6,6 +6,8 @@
 #include "math/mathTypes.h"
 #include "message/arm_common.h"
 
+namespace UNITREE_ARM {
+
 Vec6 PosturetoVec6(const Posture p);
 Posture Vec6toPosture(const Vec6 p);
 
@@ -46,4 +48,5 @@ public:
     double getGripperTau() {return tau.at(tau.size()-1);}
 };
 
+}
 #endif  //LOWLEVELSTATE_HPP

@@ -5,6 +5,7 @@
 #include <vector>
 #include <Eigen/Dense>
 
+namespace UNITREE_ARM {
 namespace typeTrans{
 
 inline void addValue(std::vector<double> &vec, double value){
@@ -71,5 +72,5 @@ inline void extractVector(std::vector<double> &vec, T &t, Args&... rest){
 }
 
 }
-
+}
 #endif  // TYPETRANS_H

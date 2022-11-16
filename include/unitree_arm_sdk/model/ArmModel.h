@@ -5,8 +5,9 @@
 #include "thirdparty/robotics.h"
 #include "thirdparty/quadProgpp/QuadProg++.hh"
 
-using namespace robo;
 
+namespace UNITREE_ARM {
+using namespace robo;
 class ArmModel{
 public:
     ArmModel(Vec3 endPosLocal, double endEffectorMass, Vec3 endEffectorCom, Mat3 endEffectorInertia);
@@ -146,5 +147,5 @@ private:
     void setParam_V3_6();
     double _theta2Bias;
 };
-
+}
 #endif

@@ -8,6 +8,7 @@
 #include <vector>
 #include "utilities/timer.h"
 
+namespace UNITREE_ARM {
 enum class BlockYN{
     YES,
     NO
@@ -53,7 +54,7 @@ private:
     size_t _sentLength;
     fd_set _rSet;
 };
-
+}
 
 
 #endif

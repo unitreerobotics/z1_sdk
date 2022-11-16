@@ -5,6 +5,8 @@
 #include <math.h>
 #include "math/mathTypes.h"
 
+namespace UNITREE_ARM {
+
 template<typename T>
 T max(T value){
     return value;
@@ -241,4 +243,5 @@ private:
     double _zoomFactor;
     std::string _valueName;
 };
+}
 #endif

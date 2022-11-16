@@ -1,5 +1,7 @@
 #include "control/unitreeArm.h"
 
+using namespace UNITREE_ARM;
+
 class Z1ARM : public unitreeArm{
 public:
     Z1ARM():unitreeArm(true){};

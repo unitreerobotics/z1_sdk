@@ -1,5 +1,7 @@
 #include "control/unitreeArm.h"
 
+using namespace UNITREE_ARM;
+
 int main() {
     Vec6 posture[2];
     unitreeArm arm(true);

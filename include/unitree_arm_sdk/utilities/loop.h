@@ -12,6 +12,7 @@
 #include <boost/bind.hpp>
 #include "utilities/timer.h"
 
+namespace UNITREE_ARM {
 typedef boost::function<void ()> Callback;
 
 class Loop {
@@ -54,5 +55,5 @@ public:
 private:
   boost::function<void ()>  _fp;
 };
-
+}
 #endif  // _UNITREE_ARM_LOOP_H_

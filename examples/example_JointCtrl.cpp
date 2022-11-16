@@ -1,5 +1,7 @@
 #include "control/unitreeArm.h"
 
+using namespace UNITREE_ARM;
+
 class JointTraj{
 public:
     JointTraj(){};

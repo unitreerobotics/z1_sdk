@@ -5,6 +5,7 @@
 
 #pragma pack(1)
 
+namespace UNITREE_ARM {
 // 4 Byte
 enum class ArmFSMState{
     INVALID,
@@ -112,5 +113,5 @@ constexpr int JointCmd_LENGTH   = (sizeof(JointCmd));
 constexpr int JointState_LENGTH = (sizeof(JointState));
 
 #pragma pack()
-
+}
 #endif  // _UNITREE_ARM_ARM_MSG_H_

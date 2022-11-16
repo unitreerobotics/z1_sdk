@@ -7,21 +7,19 @@
 #include <sys/time.h>
 #include <sys/timerfd.h>
 
-//时间戳  微秒级， 需要#include <sys/time.h> 
+namespace UNITREE_ARM {
+
 inline long long getSystemTime(){
     struct timeval t;  
     gettimeofday(&t, NULL);
     return 1000000 * t.tv_sec + t.tv_usec;  
 }
-//时间戳  秒级， 需要getSystemTime()
+
 inline double getTimeSecond(){
     double time = getSystemTime() * 0.000001;
     return time;
 }
-/*
-等待函数，微秒级，从startTime开始等待waitTime微秒
-目前不推荐使用，建议使用AbsoluteTimer类
-*/
+
 inline void absoluteWait(long long startTime, long long waitTime){
     if(getSystemTime() - startTime > waitTime){
         std::cout << "[WARNING] The waitTime=" << waitTime << " of function absoluteWait is not enough!" << std::endl
@@ -52,5 +50,5 @@ private:
     double _nextWaitTime;
     itimerspec _timerSpec;
 };
-
+}
 #endif

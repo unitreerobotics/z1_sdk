@@ -8,6 +8,7 @@
 #include "utilities/loop.h"
 #include "model/ArmModel.h"
 
+namespace UNITREE_ARM {
 struct CtrlComponents{
 public:
     CtrlComponents(double deltaT, bool hasUnitreeGripper);
@@ -48,4 +49,5 @@ private:
     UDPPort *_udp;
 };
 
+}
 #endif

@@ -3,6 +3,8 @@
 
 #include "control/ctrlComponents.h"
 
+namespace UNITREE_ARM {
+
 class unitreeArm{
 public:
 unitreeArm(bool hasUnitreeGripper);
@@ -162,4 +164,5 @@ LowlevelState *lowstate;//same as _ctrlComp->lowstate
 CtrlComponents *_ctrlComp;
 };
 
+}
 #endif

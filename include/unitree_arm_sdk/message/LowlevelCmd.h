@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 
+namespace UNITREE_ARM {
 struct LowlevelCmd{
 private:
     size_t _dof = 6;
@@ -76,5 +77,5 @@ Vec6 getQ();
 Vec6 getQd();
 };
 
-
+}
 #endif  //LOWLEVELCMD_H
