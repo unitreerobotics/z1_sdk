@@ -1,7 +1,7 @@
 #ifndef LOWLEVELCMD_H
 #define LOWLEVELCMD_H
 
-#include "math/mathTypes.h"
+#include "unitree_arm_sdk/math/mathTypes.h"
 #include <vector>
 #include <iostream>
 
