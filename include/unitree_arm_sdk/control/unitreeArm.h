@@ -1,7 +1,7 @@
 #ifndef __UNITREEARM_H
 #define __UNITREEARM_H
 
-#include "unitree_arm_sdk/control/ctrlComponents.h"
+#include "control/ctrlComponents.h"
 
 namespace UNITREE_ARM {
 
@@ -77,7 +77,7 @@ bool MoveJ(Vec6 posture, double maxSpeed);
  * Input:    posture: target position, (roll pitch yaw x y z), unit: meter
  *           gripperPos: target angular
  *             uint: radian
- *             range:[-pi/2, 0]
+ *             range:[0, pi/3]
  *           maxSpeed: the maximum joint speed when robot is moving
  *             unit: radian/s
  *             range:[0, pi]
@@ -95,7 +95,7 @@ bool MoveL(Vec6 posture, double maxSpeed);
  * Function: Move the robot in a linear path, and control the gripper at the same time
  * Input:    posture: target position, (roll pitch yaw x y z), unit: meter
  *           gripperPos: target angular, uint: radian
- *             range:[-pi/2, 0]
+ *             range:[0, pi/3]
  *           maxSpeed: the maximum joint speed when robot is moving, unit: m/s
  * Output:   whether posture has inverse kinematics
  */
@@ -113,7 +113,7 @@ bool MoveC(Vec6 middlePosutre, Vec6 endPosture, double maxSpeed);
  * Input:    middle posture: determine the shape of the circular path
  *           endPosture: target position, (roll pitch yaw x y z), unit: meter
  *           gripperPos: target angular, uint: radian
- *             range:[-pi/2, 0]
+ *             range:[0, pi/3]
  *           maxSpeed: the maximum joint speed when robot is moving, unit: m/s
  * Output:   whether posture has inverse kinematics
  */
@@ -153,24 +153,6 @@ void startTrack(ArmFSMState fsm);
  */
 void sendRecv();
 
-/*
- * Function: whether to wait for the command to finish
- * Input:    true or false
- * Output:   None
- * Description: For example, MoveJ will send a trajectory command to z1_controller and then
- *              run usleep() to wait for the trajectory execution to complete.
- *              If set [wait] to false, MoveJ  will send command only and user should judge 
- *              for youself whether the command is complete.
- *                  Method 1: if(_ctrlComp->recvState.state != fsm)
- *                      After trajectory complete, the FSM will switch to ArmFSMState::JOINTCTRL
- *                      automatically
- *                  Method 2: if((lowState->endPosture - endPostureGoal).norm() < error)
- *                      Check whether current posture reaches the target
- *              Related functions:
- *                  MoveJ(), MoveL(), MoveC(), backToStart(), labelRun(), teachRepeat()
- */
-void setWait(bool Y_N);
-
 //command parameters
 Vec6 q, qd, tau;
 Vec6 endPosture;
@@ -180,9 +162,6 @@ LoopFunc *sendRecvThread;
 LowlevelCmd *lowcmd;//same as _ctrlComp->lowcmd
 LowlevelState *lowstate;//same as _ctrlComp->lowstate
 CtrlComponents *_ctrlComp;
-
-private:
-    bool _isWait = true;
 };
 
 }

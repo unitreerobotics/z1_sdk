@@ -1,4 +1,4 @@
-#include "unitree_arm_sdk/control/unitreeArm.h"
+#include "control/unitreeArm.h"
 
 using namespace UNITREE_ARM;
 
@@ -63,7 +63,7 @@ void Z1ARM::armCtrlTrackInCartesian(){
         endPosture(5) -= _ctrlComp->dt * 0.2;//z axis, m/s
 
         // no inverse kinematics solution, the joint has reached limit
-        // std::cout << "postureCmd: " << endPosture.transpose() << " qState: " << lowstate->endPosture.transpose() << std::endl;
+        std::cout << "postureCmd: " << endPosture.transpose() << " qState: " << lowstate->endPosture.transpose() << std::endl;
         double error = fabs(endPosture(5) - lowstate->endPosture(5));
         if( error > 0.1){
             break;
@@ -91,7 +91,7 @@ int main() {
 
     arm.backToStart();
 
-    // size_t demo = 1;
+    // size_t demo = 3;
     for(size_t demo = 1; demo < 4; demo++)
     switch (demo)
     {

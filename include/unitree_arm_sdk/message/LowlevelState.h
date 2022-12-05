@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <vector>
-#include "unitree_arm_sdk/math/mathTypes.h"
-#include "unitree_arm_sdk/message/arm_common.h"
+#include "math/mathTypes.h"
+#include "message/arm_common.h"
 
 namespace UNITREE_ARM {
 

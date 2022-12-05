@@ -83,7 +83,7 @@ struct TrajCmd{
     double gripperPos;
     double maxSpeed;
     double stopTime;
-    int reserved;
+    int trajOrder;
 };
 
 union ValueUnion{

@@ -2,8 +2,8 @@
 #define ARMMODEL_H
 
 #include <vector>
-#include "unitree_arm_sdk/thirdparty/robotics.h"
-#include "unitree_arm_sdk/thirdparty/quadProgpp/QuadProg++.hh"
+#include "thirdparty/robotics.h"
+#include "thirdparty/quadProgpp/QuadProg++.hh"
 
 
 namespace UNITREE_ARM {

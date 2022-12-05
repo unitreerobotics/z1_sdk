@@ -62,7 +62,7 @@ s.t.
 #ifndef _QUADPROGPP
 #define _QUADPROGPP
 
-#include "unitree_arm_sdk/thirdparty/quadProgpp/Array.hh"
+#include "thirdparty/quadProgpp/Array.hh"
 #include <eigen3/Eigen/Dense>
 
 namespace quadprogpp {
