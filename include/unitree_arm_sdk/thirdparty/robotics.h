@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "math/mathTools.h"
+#include "unitree_arm_sdk/math/mathTools.h"
 
 namespace robo {
 /*

@@ -4,7 +4,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -pthread")
 
 set(EIGEN_PATH /usr/include/eigen3)
 include_directories(
-    include/unitree_arm_sdk
+    include
     ${EIGEN_PATH}
 )
 
@@ -16,7 +16,5 @@ add_executable(bigDemo examples/bigDemo.cpp )
 target_link_libraries(bigDemo Z1_SDK_Linux64)
 add_executable(example_lowCmd_send examples/example_lowCmd_send.cpp )
 target_link_libraries(example_lowCmd_send Z1_SDK_Linux64)
-add_executable(example_CtrlByFSM examples/example_CtrlByFSM.cpp )
-target_link_libraries(example_CtrlByFSM Z1_SDK_Linux64)
 add_executable(example_JointCtrl examples/example_JointCtrl.cpp )
 target_link_libraries(example_JointCtrl Z1_SDK_Linux64)

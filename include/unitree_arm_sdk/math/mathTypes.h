@@ -18,6 +18,9 @@ using Vec4 = typename Eigen::Matrix<double, 4, 1>;
 // 6x1 Vector
 using Vec6 = typename Eigen::Matrix<double, 6, 1>;
 
+// 7x1 Vector
+using Vec7 = typename Eigen::Matrix<double, 7, 1>;
+
 // Quaternion
 using Quat = typename Eigen::Matrix<double, 4, 1>;
 

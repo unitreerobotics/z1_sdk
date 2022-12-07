@@ -1,7 +1,7 @@
 #ifndef LOWLEVELCMD_H
 #define LOWLEVELCMD_H
 
-#include "math/mathTypes.h"
+#include "unitree_arm_sdk/math/mathTypes.h"
 #include <vector>
 #include <iostream>
 
@@ -10,7 +10,7 @@ struct LowlevelCmd{
 private:
     size_t _dof = 6;
 public:
-    Vec6 endPosture;
+    Vec6 twsit;
     std::vector<double> q;
     std::vector<double> dq;
     std::vector<double> tau;

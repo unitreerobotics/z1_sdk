@@ -1,4 +1,4 @@
-#include "control/unitreeArm.h"
+#include "unitree_arm_sdk/control/unitreeArm.h"
 
 using namespace UNITREE_ARM;
 
@@ -6,6 +6,8 @@ class JointTraj{
 public:
     JointTraj(){};
     ~JointTraj(){};
+
+    // set _pathTime and a3, a4, a5
     void setJointTraj(Vec6 startQ, Vec6 endQ, double speed){
         _startQ = startQ;
         _endQ = endQ;
@@ -16,6 +18,7 @@ public:
         }
         _generateA345();
     };
+
     void setGripper(double startQ, double endQ, double speed){
         _gripperStartQ = startQ;
         _gripperEndQ = endQ; 
@@ -60,6 +63,10 @@ private:
         _reached = (_tCost>_pathTime) ? true : false;
         _tCost = (_tCost>_pathTime) ? _pathTime : _tCost;
     }
+
+    // caculate the coefficients of the quintuple polynomial
+    //      s(t) = a_0 + a_1*t + a_2*t^2 + a_3*t^3 + a_4*t^4 +a_5*t^5
+    //      constraints: s(0) = 0; sdot(0) = 0; sdotdot(0) = 0; s(T) = 1; sdot(T) = 0; sdotdot(T) = 0
     void _generateA345(){
         if(NearZero(_pathTime)){
             _a3 = 0;
@@ -107,6 +114,7 @@ int main(){
     forward << 0.0, 1.5, -1.0, -0.54, 0.0, 0.0;
     double speed = 0.5;
     arm.startTrack(ArmFSMState::JOINTCTRL);
+    // move from current posture to [forward]
     arm.jointTraj.setJointTraj(arm._ctrlComp->lowstate->getQ(), forward, speed);
     arm.jointTraj.setGripper(arm._ctrlComp->lowstate->getGripperQ(), -1, speed);
     

@@ -1,4 +1,4 @@
-#include "control/unitreeArm.h"
+#include "unitree_arm_sdk/control/unitreeArm.h"
 
 using namespace UNITREE_ARM;
 
@@ -7,11 +7,9 @@ public:
     Z1ARM():unitreeArm(true){};
     ~Z1ARM(){};
     void armCtrlByFSM();
-    void armCtrlTrackInJointCtrl();
-    void armCtrlTrackInCartesian();
+    void armCtrlInJointCtrl();
+    void armCtrlInCartesian();
     void printState();
-private:
-    Vec6 qPast;
 };
 
  
@@ -30,7 +28,13 @@ void Z1ARM::armCtrlByFSM() {
 
     std::cout << "[MOVEL]" << std::endl;
     posture[0] << 0,0,0,0.45,-0.2,0.2;
+    setWait(false);
     MoveL(posture[0], 0., 0.3);
+    //check trajectory finish
+    while(_ctrlComp->recvState.state != ArmFSMState::JOINTCTRL){
+        usleep(2000);
+    }
+    setWait(true);
     
     std::cout << "[MOVEC]" << std::endl;
     posture[0] << 0,0,0,0.45,0,0.4;
@@ -38,39 +42,26 @@ void Z1ARM::armCtrlByFSM() {
     MoveC(posture[0], posture[1], -M_PI/3.0, 0.3);
 }
 
-void Z1ARM::armCtrlTrackInJointCtrl(){
+void Z1ARM::armCtrlInJointCtrl(){
     labelRun("forward");
     startTrack(ArmFSMState::JOINTCTRL);
-    for(;;){
-        q(3) -= _ctrlComp->dt * 1.0;//max dt*PI, rad/s
 
-        qPast = lowstate->getQ();
-        // std::cout << "qCmd: " << q.transpose() << " qState: " << qPast.transpose() << std::endl;
-        //The joint has reached limit, there is warning: joint cmd is far from state
-        double error = fabs(q(3) - qPast(3));
-        if(error > 0.1){
-            break;
-        }
+    for(int i(0); i<1000;i++){
+        directions<< 0, 0, 0, -1, 0, 0, 0;
+        jointCtrlCmd(directions, 0.5);
         usleep(_ctrlComp->dt*1000000);
     }
-    _ctrlComp->sendCmd.track = false;
 }
 
-void Z1ARM::armCtrlTrackInCartesian(){
+void Z1ARM::armCtrlInCartesian(){
     labelRun("forward");
     startTrack(ArmFSMState::CARTESIAN);
-    for(;;){
-        endPosture(5) -= _ctrlComp->dt * 0.2;//z axis, m/s
-
-        // no inverse kinematics solution, the joint has reached limit
-        std::cout << "postureCmd: " << endPosture.transpose() << " qState: " << lowstate->endPosture.transpose() << std::endl;
-        double error = fabs(endPosture(5) - lowstate->endPosture(5));
-        if( error > 0.1){
-            break;
-        }
+    
+    for(int i(0); i<1000;i++){
+        directions<< 0, 0, 0, 0, 0, -1, 0;
+        cartesianCtrlCmd(directions, 0., 0.2);
         usleep(_ctrlComp->dt*1000000);
     }
-    _ctrlComp->sendCmd.track = false;
 }
 
 void Z1ARM::printState(){
@@ -91,7 +82,7 @@ int main() {
 
     arm.backToStart();
 
-    // size_t demo = 3;
+    // size_t demo = 2;
     for(size_t demo = 1; demo < 4; demo++)
     switch (demo)
     {
@@ -99,10 +90,10 @@ int main() {
             arm.armCtrlByFSM();
             break;
         case 2:
-            arm.armCtrlTrackInJointCtrl();
+            arm.armCtrlInJointCtrl();
             break;
         case 3:
-            arm.armCtrlTrackInCartesian();
+            arm.armCtrlInCartesian();
             break;
         default:
             break;
