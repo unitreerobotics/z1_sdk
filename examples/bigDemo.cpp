@@ -24,22 +24,16 @@ void Z1ARM::armCtrlByFSM() {
     
     std::cout << "[MOVEJ]" << std::endl;
     posture[0]<<0.5,0.1,0.1,0.5,-0.2,0.5;
-    MoveJ(posture[0], -M_PI/3.0, 1.0);
+    MoveJ(posture[0], 0, 1.0);
 
     std::cout << "[MOVEL]" << std::endl;
     posture[0] << 0,0,0,0.45,-0.2,0.2;
-    setWait(false);
-    MoveL(posture[0], 0., 0.3);
-    //check trajectory finish
-    while(_ctrlComp->recvState.state != ArmFSMState::JOINTCTRL){
-        usleep(2000);
-    }
-    setWait(true);
+    MoveL(posture[0], -1, 0.3);
     
     std::cout << "[MOVEC]" << std::endl;
     posture[0] << 0,0,0,0.45,0,0.4;
     posture[1] << 0,0,0,0.45,0.2,0.2;
-    MoveC(posture[0], posture[1], -M_PI/3.0, 0.3);
+    MoveC(posture[0], posture[1], 0, 0.3);
 }
 
 void Z1ARM::armCtrlInJointCtrl(){
@@ -59,7 +53,7 @@ void Z1ARM::armCtrlInCartesian(){
     
     for(int i(0); i<1000;i++){
         directions<< 0, 0, 0, 0, 0, -1, 0;
-        cartesianCtrlCmd(directions, 0., 0.2);
+        cartesianCtrlCmd(directions, 0., 0.1);
         usleep(_ctrlComp->dt*1000000);
     }
 }
@@ -82,8 +76,8 @@ int main() {
 
     arm.backToStart();
 
-    // size_t demo = 2;
-    for(size_t demo = 1; demo < 4; demo++)
+    size_t demo = 2;
+    // for(size_t demo = 1; demo < 4; demo++)
     switch (demo)
     {
         case 1:
