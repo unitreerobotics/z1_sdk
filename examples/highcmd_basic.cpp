@@ -53,7 +53,7 @@ void Z1ARM::armCtrlInCartesian(){
     
     for(int i(0); i<1000;i++){
         directions<< 0, 0, 0, 0, 0, -1, 0;
-        cartesianCtrlCmd(directions, 0., 0.1);
+        cartesianCtrlCmd(directions, 0.3, 0.1);
         usleep(_ctrlComp->dt*1000000);
     }
 }

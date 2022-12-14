@@ -134,7 +134,7 @@ bool MoveC(Vec6 middlePosutre, Vec6 endPosture, double gripperPos, double maxSpe
  *              if you run function startTrack(ArmFSMState::CARTESIAN), 
  *              firstly, the following parameters will be set at the first time:
  *                  twist.setZero()
- *              then you can change it to control robot
+ *              then you can change it to control robot, [Based on the object coordinate system]
  */
 void startTrack(ArmFSMState fsm);
 /*
@@ -186,7 +186,8 @@ void setWait(bool Y_N);
 void jointCtrlCmd(Vec7 directions, double jointSpeed);
 
 /*
- * Function: set spatial velocity command automatically by input parameters
+ * Function: set spatial velocity command automatically by input parameters 
+             Based on the object coordinate system
  * Input:    directions: movement directions [include gripper], range:[-1,1]
  *                       raw, pitch, yaw, x, y, z, gripper
  *           oriSpeed: range: [0, 0.6]
@@ -196,11 +197,13 @@ void jointCtrlCmd(Vec7 directions, double jointSpeed);
  * Description: The function is typically used to control the robot by keyboard or joystick
  *              When a key is pressed, the directions[i] is set to 1 or -1, and the function will 
  *              automatically execute the following command:
- *                      Tdelta = directions * speed
- *                      Tgoal  = Tdelta * Tpast
- *                      omega  = so3ToVec(MatrixLog3( Tpast.Rot.Transpose * Tgoal.Rot ))
- *                      v      = Tdelta.t
- *                      twist  = (omega, v)
+ *                      postureDelta = directions * speed
+ *                      postureGoal  = postureDelta + posturePast
+ *                      Tgoal = postureToHomo(postureGoal)
+ *                      Tpast = postureToHomo(posturePast)
+ *                      omega = so3ToVec(MatrixLog3( Tpast.Rot.Transpose * Tgoal.Rot ))
+ *                      v     = Tdelta.t
+ *                      twist = (omega, v)
  *              if directions == 0, the robot stop moving
  */
 void cartesianCtrlCmd(Vec7 directions, double oriSpeed, double posSpeed);
