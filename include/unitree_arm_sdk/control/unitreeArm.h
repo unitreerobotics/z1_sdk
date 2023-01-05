@@ -189,7 +189,7 @@ void jointCtrlCmd(Vec7 directions, double jointSpeed);
  * Function: set spatial velocity command automatically by input parameters 
              Based on the object coordinate system
  * Input:    directions: movement directions [include gripper], range:[-1,1]
- *                       raw, pitch, yaw, x, y, z, gripper
+ *                       roll, pitch, yaw, x, y, z, gripper
  *           oriSpeed: range: [0, 0.6]
  *           posSpeed: range: [0, 0.3]
  *                  gripper joint speed is set to 1.0
