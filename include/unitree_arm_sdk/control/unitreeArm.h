@@ -9,6 +9,7 @@ class unitreeArm{
 public:
 unitreeArm(bool hasUnitreeGripper);
 ~unitreeArm();
+
 /*
  * Function: Change z1_ctrl state to fsm, wait until change complete
  * Input:    ArmFSMState
@@ -16,6 +17,7 @@ unitreeArm(bool hasUnitreeGripper);
  * Note:     eaxmple: Only State_Passive could switch to State_LowCmd
  */
 bool setFsm(ArmFSMState fsm);
+
 /*
  * Function: Move arm to home position
  *           wait until arrival home position, and then switch to State_JointCtrl
@@ -23,6 +25,7 @@ bool setFsm(ArmFSMState fsm);
  * Output:   None
  */
 void backToStart();
+
 /*
  * Function: Move arm to label position
  *           wait until arrival label position, and then switch to State_JointCtrl
@@ -32,6 +35,7 @@ void backToStart();
  * Output:   None
  */
 void labelRun(std::string label);
+
 /*
  * Function: Save current position as a label to saveArmStates.csv
  *           Switch to State_JointCtrl when done
@@ -41,6 +45,7 @@ void labelRun(std::string label);
  * Output:   None
  */
 void labelSave(std::string label);
+
 /*
  * Function: Save current position as a label to saveArmStates.csv
  *           Switch to State_JointCtrl when done
@@ -50,6 +55,7 @@ void labelSave(std::string label);
  * Output:   None
  */
 void teach(std::string label);
+
 /*
  * Function: Switch to State_Teach
  * Input:    label
@@ -58,23 +64,26 @@ void teach(std::string label);
  * Output:   None
  */
 void teachRepeat(std::string label);
+
 /*
  * Function: Calibrate the motor, make current position as home position
  * Input:    None
  * Output:   None
  */
 void calibration();
+
 /*
  * Function: Move the robot in a joint path
- * Input:    posture: target position, (roll pitch yaw x y z), unit: meter
+ * Input:    posture: target position, (rx ry rz x y z), unit: meter
  *           maxSpeed: the maximum joint speed when robot is moving, unit: radian/s
  *             range:[0, pi]
  * Output:   None
  */
 bool MoveJ(Vec6 posture, double maxSpeed);
+
 /*
  * Function: Move the robot in a joint path, and control the gripper at the same time
- * Input:    posture: target position, (roll pitch yaw x y z), unit: meter
+ * Input:    posture: target position, (rx ry rz x y z), unit: meter
  *           gripperPos: target angular
  *             uint: radian
  *             range:[-pi/2, 0]
@@ -84,40 +93,45 @@ bool MoveJ(Vec6 posture, double maxSpeed);
  * Output:   whether posture has inverse kinematics
  */
 bool MoveJ(Vec6 posture, double gripperPos, double maxSpeed);
+
 /*
  * Function: Move the robot in a linear path
- * Input:    posture: target position, (roll pitch yaw x y z), unit: meter
+ * Input:    posture: target position, (rx ry rz x y z), unit: meter
  *           maxSpeed: the maximum joint speed when robot is moving, unit: m/s
  * Output:   whether posture has inverse kinematics
  */
 bool MoveL(Vec6 posture, double maxSpeed);
+
 /*
  * Function: Move the robot in a linear path, and control the gripper at the same time
- * Input:    posture: target position, (roll pitch yaw x y z), unit: meter
+ * Input:    posture: target position, (rx ry rz x y z), unit: meter
  *           gripperPos: target angular, uint: radian
  *             range:[-pi/2, 0]
  *           maxSpeed: the maximum joint speed when robot is moving, unit: m/s
  * Output:   whether posture has inverse kinematics
  */
 bool MoveL(Vec6 posture, double gripperPos, double maxSpeed);
+
 /*
  * Function: Move the robot in a circular path
  * Input:    middle posture: determine the shape of the circular path
- *           endPosture: target position, (roll pitch yaw x y z), unit: meter
+ *           endPosture: target position, (rx ry rz x y z), unit: meter
  *           maxSpeed: the maximum joint speed when robot is moving, unit: m/s
  * Output:   whether posture has inverse kinematics
  */
 bool MoveC(Vec6 middlePosutre, Vec6 endPosture, double maxSpeed);
+
 /*
  * Function: Move the robot in a circular path, and control the gripper at the same time
  * Input:    middle posture: determine the shape of the circular path
- *           endPosture: target position, (roll pitch yaw x y z), unit: meter
+ *           endPosture: target position, (rx ry rz x y z), unit: meter
  *           gripperPos: target angular, uint: radian
  *             range:[-pi/2, 0]
  *           maxSpeed: the maximum joint speed when robot is moving, unit: m/s
  * Output:   whether posture has inverse kinematics
  */
 bool MoveC(Vec6 middlePosutre, Vec6 endPosture, double gripperPos, double maxSpeed);
+
 /*
  * Function: Control robot with q&qd command  in joint space or posture command in cartesian space
  * Input:    fsm: ArmFSMState::JOINTCTRL or ArmFSMState::CARTESIAN
@@ -137,6 +151,7 @@ bool MoveC(Vec6 middlePosutre, Vec6 endPosture, double gripperPos, double maxSpe
  *              then you can change it to control robot, [Based on the object coordinate system]
  */
 void startTrack(ArmFSMState fsm);
+
 /*
  * Function: send udp message to z1_ctrl and receive udp message from it
  * Input:    None
@@ -172,7 +187,7 @@ void setWait(bool Y_N);
 
 /*
  * Function: set q & qd command automatically by input parameters
- * Input:    directions: movement directions [include gripper], range:[-1,1]
+ * Input:    directions: movement directions [include gripper], range:[-1,-1]
  *                       J1, J2, J3, J4, J5, J6, gripper
  *           jointSpeed: range: [0, pi]
  * Output:   None
@@ -186,10 +201,9 @@ void setWait(bool Y_N);
 void jointCtrlCmd(Vec7 directions, double jointSpeed);
 
 /*
- * Function: set spatial velocity command automatically by input parameters 
-             Based on the object coordinate system
- * Input:    directions: movement directions [include gripper], range:[-1,1]
- *                       roll, pitch, yaw, x, y, z, gripper
+ * Function: set spatial velocity command automatically by input parameters
+ * Input:    directions: movement directions [include gripper], range:[-1,-1]
+ *                       rx, ry, rz, x, y, z, gripper
  *           oriSpeed: range: [0, 0.6]
  *           posSpeed: range: [0, 0.3]
  *                  gripper joint speed is set to 1.0
@@ -201,9 +215,9 @@ void jointCtrlCmd(Vec7 directions, double jointSpeed);
  *                      postureGoal  = postureDelta + posturePast
  *                      Tgoal = postureToHomo(postureGoal)
  *                      Tpast = postureToHomo(posturePast)
- *                      omega = so3ToVec(MatrixLog3( Tpast.Rot.Transpose * Tgoal.Rot ))
- *                      v     = Tdelta.t
- *                      twist = (omega, v)
+ *                      omega  = so3ToVec(MatrixLog3( Tpast.Rot.Transpose * Tgoal.Rot ))
+ *                      v      = Tdelta.t
+ *                      twist  = (omega, v)
  *              if directions == 0, the robot stop moving
  */
 void cartesianCtrlCmd(Vec7 directions, double oriSpeed, double posSpeed);

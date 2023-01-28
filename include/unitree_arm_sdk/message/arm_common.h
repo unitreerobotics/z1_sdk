@@ -69,9 +69,9 @@ struct JointState{
 };
 
 struct Posture{
-    double roll;
-    double pitch;
-    double yaw;
+    double rx;
+    double ry;
+    double rz;
     double x;
     double y;
     double z;
@@ -83,7 +83,7 @@ struct TrajCmd{
     double gripperPos;
     double maxSpeed;
     double stopTime;
-    int reserved;
+    int trajOrder;
 };
 
 union ValueUnion{
