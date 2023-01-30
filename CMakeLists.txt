@@ -16,3 +16,7 @@ add_executable(highcmd_development examples/highcmd_development.cpp )
 target_link_libraries(highcmd_development Z1_SDK_Linux64)
 add_executable(lowcmd_development examples/lowcmd_development.cpp )
 target_link_libraries(lowcmd_development Z1_SDK_Linux64)
+
+add_subdirectory(pybind11)
+pybind11_add_module(unitree_arm_interface examples_py/arm_python_interface.cpp)
+target_link_libraries(unitree_arm_interface PRIVATE Z1_SDK_Linux64)
