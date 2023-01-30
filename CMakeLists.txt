@@ -8,6 +8,7 @@ include_directories(
     ${EIGEN_PATH}
 )
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../lib)
 link_directories(lib)
 
 add_executable(highcmd_basic examples/highcmd_basic.cpp )
