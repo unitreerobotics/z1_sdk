@@ -18,6 +18,7 @@ unitreeArm(bool hasUnitreeGripper);
  */
 bool setFsm(ArmFSMState fsm);
 
+
 /*
  * Function: Move arm to home position
  *           wait until arrival home position, and then switch to State_JointCtrl
@@ -25,6 +26,7 @@ bool setFsm(ArmFSMState fsm);
  * Output:   None
  */
 void backToStart();
+
 
 /*
  * Function: Move arm to label position
@@ -36,6 +38,7 @@ void backToStart();
  */
 void labelRun(std::string label);
 
+
 /*
  * Function: Save current position as a label to saveArmStates.csv
  *           Switch to State_JointCtrl when done
@@ -45,6 +48,7 @@ void labelRun(std::string label);
  * Output:   None
  */
 void labelSave(std::string label);
+
 
 /*
  * Function: Save current position as a label to saveArmStates.csv
@@ -56,6 +60,7 @@ void labelSave(std::string label);
  */
 void teach(std::string label);
 
+
 /*
  * Function: Switch to State_Teach
  * Input:    label
@@ -65,12 +70,14 @@ void teach(std::string label);
  */
 void teachRepeat(std::string label);
 
+
 /*
  * Function: Calibrate the motor, make current position as home position
  * Input:    None
  * Output:   None
  */
 void calibration();
+
 
 /*
  * Function: Move the robot in a joint path
@@ -80,6 +87,7 @@ void calibration();
  * Output:   None
  */
 bool MoveJ(Vec6 posture, double maxSpeed);
+
 
 /*
  * Function: Move the robot in a joint path, and control the gripper at the same time
@@ -94,6 +102,7 @@ bool MoveJ(Vec6 posture, double maxSpeed);
  */
 bool MoveJ(Vec6 posture, double gripperPos, double maxSpeed);
 
+
 /*
  * Function: Move the robot in a linear path
  * Input:    posture: target position, (rx ry rz x y z), unit: meter
@@ -101,6 +110,7 @@ bool MoveJ(Vec6 posture, double gripperPos, double maxSpeed);
  * Output:   whether posture has inverse kinematics
  */
 bool MoveL(Vec6 posture, double maxSpeed);
+
 
 /*
  * Function: Move the robot in a linear path, and control the gripper at the same time
@@ -112,6 +122,7 @@ bool MoveL(Vec6 posture, double maxSpeed);
  */
 bool MoveL(Vec6 posture, double gripperPos, double maxSpeed);
 
+
 /*
  * Function: Move the robot in a circular path
  * Input:    middle posture: determine the shape of the circular path
@@ -120,6 +131,7 @@ bool MoveL(Vec6 posture, double gripperPos, double maxSpeed);
  * Output:   whether posture has inverse kinematics
  */
 bool MoveC(Vec6 middlePosutre, Vec6 endPosture, double maxSpeed);
+
 
 /*
  * Function: Move the robot in a circular path, and control the gripper at the same time
@@ -131,6 +143,7 @@ bool MoveC(Vec6 middlePosutre, Vec6 endPosture, double maxSpeed);
  * Output:   whether posture has inverse kinematics
  */
 bool MoveC(Vec6 middlePosutre, Vec6 endPosture, double gripperPos, double maxSpeed);
+
 
 /*
  * Function: Control robot with q&qd command  in joint space or posture command in cartesian space
@@ -152,6 +165,7 @@ bool MoveC(Vec6 middlePosutre, Vec6 endPosture, double gripperPos, double maxSpe
  */
 void startTrack(ArmFSMState fsm);
 
+
 /*
  * Function: send udp message to z1_ctrl and receive udp message from it
  * Input:    None
@@ -166,6 +180,7 @@ void startTrack(ArmFSMState fsm);
  *              and execute sendRecv() at the end of thread
  */
 void sendRecv();
+
 
 /*
  * Function: whether to wait for the command to finish
@@ -185,6 +200,7 @@ void sendRecv();
  */
 void setWait(bool Y_N);
 
+
 /*
  * Function: set q & qd command automatically by input parameters
  * Input:    directions: movement directions [include gripper], range:[-1,-1]
@@ -199,6 +215,7 @@ void setWait(bool Y_N);
  *              if directions == 0, the robot stop moving
  */
 void jointCtrlCmd(Vec7 directions, double jointSpeed);
+
 
 /*
  * Function: set spatial velocity command automatically by input parameters
@@ -221,6 +238,7 @@ void jointCtrlCmd(Vec7 directions, double jointSpeed);
  *              if directions == 0, the robot stop moving
  */
 void cartesianCtrlCmd(Vec7 directions, double oriSpeed, double posSpeed);
+
 
 //command parameters
 Vec6 q, qd, tau;

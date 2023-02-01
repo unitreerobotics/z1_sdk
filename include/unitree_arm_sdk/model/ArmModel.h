@@ -22,6 +22,8 @@ public:
  *				at the specified coordinates
  */
 HomoMat forwardKinematics(Vec6 q, int index = 6);
+
+
 /*
  * Function: Computes inverse kinematics in the space frame with the irerative approach
  * Inputs: TDes: The desired end-effector configuration
@@ -40,12 +42,16 @@ HomoMat forwardKinematics(Vec6 q, int index = 6);
  *          q_result: Joint angles that achieve T within the specified tolerances,
  */
 virtual bool inverseKinematics(HomoMat TDes, Vec6 qPast, Vec6& q_result, bool checkInWorkSpace = false);
+
+
 /*
  * Function: Gives the space Jacobian
  * Inputs: q: current joint angles
  * Returns: 6x6 Spatial Jacobian
  */
 Mat6 CalcJacobian(Vec6 q);
+
+
 /*
  * Function: This function uses forward-backward Newton-Euler iterations to caculate inverse dynamics
  * Inputs: q: joint angles
@@ -57,6 +63,8 @@ Mat6 CalcJacobian(Vec6 q);
 Vec6 inverseDynamics(Vec6 q, Vec6 qd, Vec6 qdd, Vec6 Ftip);
 virtual void solveQP(Vec6 twist, Vec6 qPast, Vec6& qd_result, double dt) = 0;
 virtual bool checkInSingularity(Vec6 q) = 0;
+
+
 /*
  * Function: Limit q & qd inputs to valid values
  * Inputs: q: set in range[_jointQMin, _jointQMax]
@@ -67,6 +75,8 @@ void jointProtect(Vec6& q, Vec6& qd);
 std::vector<double> getJointQMax() {return _jointQMax;}
 std::vector<double> getJointQMin() {return _jointQMin;}
 std::vector<double> getJointSpeedMax() {return _jointSpeedMax;}
+
+
 /*
  * Function: The load is applied to the end joint in equal proportion 
              and caculates the correspoding dynamic parameters
@@ -107,16 +117,18 @@ protected:
 
 class Z1Model : public ArmModel{
 public:
-    Z1Model(Vec3 endPosLocal = Vec3::Zero(), double endEffectorMass = 0.0,
-            Vec3 endEffectorCom = Vec3::Zero(), Mat3 endEffectorInertia = Mat3::Zero());
-    ~Z1Model(){};
+Z1Model(Vec3 endPosLocal = Vec3::Zero(), double endEffectorMass = 0.0,
+        Vec3 endEffectorCom = Vec3::Zero(), Mat3 endEffectorInertia = Mat3::Zero());
+~Z1Model(){};
 /*
  * Function: Check whether joint1 and joint5 is coaxial
  *           x5^2 + y5^2 < 0.1^2
  * Inputs: q: current joint variables
  * Returns: bool
  */
-    bool checkInSingularity(Vec6 q);
+bool checkInSingularity(Vec6 q);
+
+
 /*
  * Function: Computes inverse kinematics in the space frame with the analytical approach
  * Inputs: TDes: The desired end-effector configuration
@@ -134,7 +146,9 @@ public:
  *                   number of maximum iterations without finding a solution
  *          q_result: Joint angles that achieve T within the specified tolerances,
  */
-    bool inverseKinematics(HomoMat TDes, Vec6 qPast, Vec6& q_result, bool checkInWorkSpace = false);
+bool inverseKinematics(HomoMat TDes, Vec6 qPast, Vec6& q_result, bool checkInWorkSpace = false);
+
+
 /*
  * Function: The function use quadprog++ to slove equation: qd = J.inverse() * twist, even if J has no inverse 
  * Inputs: twist: spatial velocity [R_dot, p_dot]
@@ -142,7 +156,9 @@ public:
  *         dt : compute period
  * Returns: qd_result: joint velocity that are corresponding to twist
  */
-    void solveQP(Vec6 twist, Vec6 qPast, Vec6& qd_result, double dt);
+void solveQP(Vec6 twist, Vec6 qPast, Vec6& qd_result, double dt);
+
+
 private:
     void setParam_V3_6();
     double _theta2Bias;

@@ -13,6 +13,8 @@ struct CtrlComponents{
 public:
     CtrlComponents(double deltaT, bool hasUnitreeGripper);
     ~CtrlComponents();
+
+
 /*
  * Function: send udp message to z1_ctrl and receive udp message from it
  * Input:    None
@@ -21,6 +23,8 @@ public:
  *              and call udp->recv() to store datas from z1_ctrl into lowstate
  */
     void sendRecv();
+
+
 /*
  * Function: Set six joints commands to class lowcmd
  * Input:    q:  joint angle
@@ -29,6 +33,8 @@ public:
  * Output:   None
  */
     void armCtrl(Vec6 q, Vec6 qd, Vec6 tau);
+
+    
 /*
  * Function: Set gripper commands to class lowcmd
  * Input:    q:  joint angle
