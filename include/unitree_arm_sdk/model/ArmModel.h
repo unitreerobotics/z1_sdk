@@ -12,6 +12,8 @@ class ArmModel{
 public:
     ArmModel(Vec3 endPosLocal, double endEffectorMass, Vec3 endEffectorCom, Mat3 endEffectorInertia);
     ~ArmModel(){};
+
+    
 /*
  * Function: compute end effector frame (used for current spatial position calculation)
  * Inputs: q: current joint angles
@@ -41,7 +43,7 @@ HomoMat forwardKinematics(Vec6 q, int index = 6);
  *                   number of maximum iterations without finding a solution
  *          q_result: Joint angles that achieve T within the specified tolerances,
  */
-virtual bool inverseKinematics(HomoMat TDes, Vec6 qPast, Vec6& q_result, bool checkInWorkSpace = false);
+virtual bool inverseKinematics(HomoMat TDes, Vec6 qPast, Eigen::Ref<Vec6> q_result, bool checkInWorkSpace = false);
 
 
 /*
@@ -61,7 +63,7 @@ Mat6 CalcJacobian(Vec6 q);
  * Returns: required joint forces/torques
  */
 Vec6 inverseDynamics(Vec6 q, Vec6 qd, Vec6 qdd, Vec6 Ftip);
-virtual void solveQP(Vec6 twist, Vec6 qPast, Vec6& qd_result, double dt) = 0;
+virtual void solveQP(Vec6 twist, Vec6 qPast, Eigen::Ref<Vec6> qd_result, double dt) = 0;
 virtual bool checkInSingularity(Vec6 q) = 0;
 
 
@@ -71,7 +73,7 @@ virtual bool checkInSingularity(Vec6 q) = 0;
  *         qd: set in range[-_jointSpeedMax, _jointSpeedMax]
  * Returns: None
  */
-void jointProtect(Vec6& q, Vec6& qd);
+void jointProtect(Eigen::Ref<Vec6> q, Eigen::Ref<Vec6> qd);
 std::vector<double> getJointQMax() {return _jointQMax;}
 std::vector<double> getJointQMin() {return _jointQMin;}
 std::vector<double> getJointSpeedMax() {return _jointSpeedMax;}
@@ -117,9 +119,11 @@ protected:
 
 class Z1Model : public ArmModel{
 public:
-Z1Model(Vec3 endPosLocal = Vec3::Zero(), double endEffectorMass = 0.0,
-        Vec3 endEffectorCom = Vec3::Zero(), Mat3 endEffectorInertia = Mat3::Zero());
-~Z1Model(){};
+    Z1Model(Vec3 endPosLocal = Vec3::Zero(), double endEffectorMass = 0.0,
+            Vec3 endEffectorCom = Vec3::Zero(), Mat3 endEffectorInertia = Mat3::Zero());
+    ~Z1Model(){};
+
+
 /*
  * Function: Check whether joint1 and joint5 is coaxial
  *           x5^2 + y5^2 < 0.1^2
@@ -146,7 +150,7 @@ bool checkInSingularity(Vec6 q);
  *                   number of maximum iterations without finding a solution
  *          q_result: Joint angles that achieve T within the specified tolerances,
  */
-bool inverseKinematics(HomoMat TDes, Vec6 qPast, Vec6& q_result, bool checkInWorkSpace = false);
+bool inverseKinematics(HomoMat TDes, Vec6 qPast, Eigen::Ref<Vec6> q_result, bool checkInWorkSpace = false);
 
 
 /*
@@ -156,7 +160,7 @@ bool inverseKinematics(HomoMat TDes, Vec6 qPast, Vec6& q_result, bool checkInWor
  *         dt : compute period
  * Returns: qd_result: joint velocity that are corresponding to twist
  */
-void solveQP(Vec6 twist, Vec6 qPast, Vec6& qd_result, double dt);
+void solveQP(Vec6 twist, Vec6 qPast, Eigen::Ref<Vec6> qd_result, double dt);
 
 
 private:

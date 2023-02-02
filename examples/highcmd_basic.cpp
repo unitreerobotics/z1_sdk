@@ -62,7 +62,7 @@ void Z1ARM::printState(){
     std::cout<<"tauState: "<<lowstate->getTau().transpose()<<std::endl;
 
     std::cout<<"------ Endeffector Cartesian Posture ------"<<std::endl;
-    std::cout<<"rx ry rz x y z"<<std::endl;
+    std::cout<<"roll pitch yaw x y z"<<std::endl;
     std::cout<<lowstate->endPosture.transpose()<<std::endl;
 }
 

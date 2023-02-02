@@ -10,6 +10,7 @@ public:
 unitreeArm(bool hasUnitreeGripper);
 ~unitreeArm();
 
+
 /*
  * Function: Change z1_ctrl state to fsm, wait until change complete
  * Input:    ArmFSMState
@@ -81,7 +82,7 @@ void calibration();
 
 /*
  * Function: Move the robot in a joint path
- * Input:    posture: target position, (rx ry rz x y z), unit: meter
+ * Input:    posture: target position, (roll pitch yaw x y z), unit: meter
  *           maxSpeed: the maximum joint speed when robot is moving, unit: radian/s
  *             range:[0, pi]
  * Output:   None
@@ -91,7 +92,7 @@ bool MoveJ(Vec6 posture, double maxSpeed);
 
 /*
  * Function: Move the robot in a joint path, and control the gripper at the same time
- * Input:    posture: target position, (rx ry rz x y z), unit: meter
+ * Input:    posture: target position, (roll pitch yaw x y z), unit: meter
  *           gripperPos: target angular
  *             uint: radian
  *             range:[-pi/2, 0]
@@ -105,7 +106,7 @@ bool MoveJ(Vec6 posture, double gripperPos, double maxSpeed);
 
 /*
  * Function: Move the robot in a linear path
- * Input:    posture: target position, (rx ry rz x y z), unit: meter
+ * Input:    posture: target position, (roll pitch yaw x y z), unit: meter
  *           maxSpeed: the maximum joint speed when robot is moving, unit: m/s
  * Output:   whether posture has inverse kinematics
  */
@@ -114,7 +115,7 @@ bool MoveL(Vec6 posture, double maxSpeed);
 
 /*
  * Function: Move the robot in a linear path, and control the gripper at the same time
- * Input:    posture: target position, (rx ry rz x y z), unit: meter
+ * Input:    posture: target position, (roll pitch yaw x y z), unit: meter
  *           gripperPos: target angular, uint: radian
  *             range:[-pi/2, 0]
  *           maxSpeed: the maximum joint speed when robot is moving, unit: m/s
@@ -126,7 +127,7 @@ bool MoveL(Vec6 posture, double gripperPos, double maxSpeed);
 /*
  * Function: Move the robot in a circular path
  * Input:    middle posture: determine the shape of the circular path
- *           endPosture: target position, (rx ry rz x y z), unit: meter
+ *           endPosture: target position, (roll pitch yaw x y z), unit: meter
  *           maxSpeed: the maximum joint speed when robot is moving, unit: m/s
  * Output:   whether posture has inverse kinematics
  */
@@ -136,7 +137,7 @@ bool MoveC(Vec6 middlePosutre, Vec6 endPosture, double maxSpeed);
 /*
  * Function: Move the robot in a circular path, and control the gripper at the same time
  * Input:    middle posture: determine the shape of the circular path
- *           endPosture: target position, (rx ry rz x y z), unit: meter
+ *           endPosture: target position, (roll pitch yaw x y z), unit: meter
  *           gripperPos: target angular, uint: radian
  *             range:[-pi/2, 0]
  *           maxSpeed: the maximum joint speed when robot is moving, unit: m/s
@@ -220,7 +221,7 @@ void jointCtrlCmd(Vec7 directions, double jointSpeed);
 /*
  * Function: set spatial velocity command automatically by input parameters
  * Input:    directions: movement directions [include gripper], range:[-1,1]
- *                       rx, ry, rz, x, y, z, gripper
+ *                       roll, pitch, yaw, x, y, z, gripper
  *           oriSpeed: range: [0, 0.6]
  *           posSpeed: range: [0, 0.3]
  *                  gripper joint speed is set to 1.0

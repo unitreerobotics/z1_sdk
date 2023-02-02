@@ -14,11 +14,12 @@ int main(){
     for(int i=0; i<duration; i++)
     {
         arm.q = lastPos*(1-i/duration) + targetPos*(i/duration);
-        arm.qd = (targetPos-lastPos)/(duration*0.002);
+        arm.qd = (targetPos-lastPos)/(duration*arm._ctrlComp->dt);
         usleep(2000);
     }
 
     arm.backToStart();
     arm.setFsm(UNITREE_ARM::ArmFSMState::PASSIVE);
+    arm.sendRecvThread->shutdown();
     return 0;
 }

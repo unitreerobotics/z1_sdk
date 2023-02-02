@@ -23,6 +23,8 @@ public:
 
 namespace py = pybind11;
 PYBIND11_MODULE(unitree_arm_interface, m){
+    using rvp = py::return_value_policy;
+
     py::enum_<ArmFSMState>(m, "ArmFSMState")
         .value("INVALID", ArmFSMState::INVALID)
         .value("PASSIVE", ArmFSMState::PASSIVE)
@@ -32,14 +34,47 @@ PYBIND11_MODULE(unitree_arm_interface, m){
         ;
 
     py::class_<LowlevelState>(m, "LowlevelState")
-        .def("getQ", &LowlevelState::getQ, py::return_value_policy::reference_internal)
-        .def("getQd", &LowlevelState::getQd, py::return_value_policy::reference_internal)
-        .def("getQdd", &LowlevelState::getQdd, py::return_value_policy::reference_internal)
-        .def("getQTau", &LowlevelState::getTau, py::return_value_policy::reference_internal)
+        .def("getQ", &LowlevelState::getQ, rvp::reference_internal)
+        .def("getQd", &LowlevelState::getQd, rvp::reference_internal)
+        .def("getQdd", &LowlevelState::getQdd, rvp::reference_internal)
+        .def("getQTau", &LowlevelState::getTau, rvp::reference_internal)
+        ;
+
+    py::class_<CtrlComponents>(m, "CtrlComponents")
+        .def_readwrite("armModel", &CtrlComponents::armModel)
+        .def_readonly("dt", &CtrlComponents::dt)
+        ;
+
+    py::class_<Z1Model>(m, "Z1Model")
+        .def(py::init<Vec3, double, Vec3, Mat3>())
+        .def("checkInSingularity", &Z1Model::checkInSingularity)
+        // Pass-by-reference does not work in this method. 
+        // [incompatible function arguments.] Z1Model.jointProtect(arm.q, arm.qd)
+        //.def("jointProtect", &Z1Model::jointProtect) 
+        .def("jointProtect", [](Z1Model& self, Vec6 q, Vec6 qd){
+            self.jointProtect(q, qd);
+            return std::make_pair(q, qd);
+        })
+        .def("getJointQMax", &Z1Model::getJointQMax, rvp::reference_internal)
+        .def("getJointQMin", &Z1Model::getJointQMin, rvp::reference_internal)
+        .def("getJointSpeedMax", &Z1Model::getJointSpeedMax, rvp::reference_internal)
+        .def("inverseKinematics", [](Z1Model& self, HomoMat Tdes, Vec6 qPast, bool checkInWorkSpace){
+            Vec6 q_result;
+            bool hasIK = self.inverseKinematics(Tdes, qPast, q_result, checkInWorkSpace);
+            return std::make_pair(hasIK, q_result);
+        })
+        .def("forwardKinematics", &Z1Model::forwardKinematics)
+        .def("inverseDynamics", &Z1Model::inverseDynamics)
+        .def("CalcJacobian", &Z1Model::CalcJacobian)
+        .def("solveQP", [](Z1Model& self, Vec6 twist, Vec6 qPast, double dt){
+            Vec6 qd_result;
+            self.solveQP(twist, qPast, qd_result, dt);
+            return qd_result;
+        })
         ;
 
     py::class_<ArmInterface>(m, "ArmInterface")
-        .def(py::init<bool>())
+        .def(py::init<bool>(), py::arg("hasGripper")=true)
         .def_readwrite("q", &ArmInterface::q)
         .def_readwrite("qd", &ArmInterface::qd)
         .def_readwrite("tau", &ArmInterface::tau)
