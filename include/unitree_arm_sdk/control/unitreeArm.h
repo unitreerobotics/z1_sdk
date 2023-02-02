@@ -203,7 +203,7 @@ void setWait(bool Y_N);
 
 /*
  * Function: set q & qd command automatically by input parameters
- * Input:    directions: movement directions [include gripper], range:[-1,-1]
+ * Input:    directions: movement directions [include gripper], range:[-1,1]
  *                       J1, J2, J3, J4, J5, J6, gripper
  *           jointSpeed: range: [0, pi]
  * Output:   None
@@ -219,7 +219,7 @@ void jointCtrlCmd(Vec7 directions, double jointSpeed);
 
 /*
  * Function: set spatial velocity command automatically by input parameters
- * Input:    directions: movement directions [include gripper], range:[-1,-1]
+ * Input:    directions: movement directions [include gripper], range:[-1,1]
  *                       rx, ry, rz, x, y, z, gripper
  *           oriSpeed: range: [0, 0.6]
  *           posSpeed: range: [0, 0.3]
