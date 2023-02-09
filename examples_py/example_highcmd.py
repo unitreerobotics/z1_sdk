@@ -4,6 +4,8 @@ import unitree_arm_interface
 import time
 import numpy as np
 
+print("Press ctrl+\ to quit process.")
+
 np.set_printoptions(precision=3, suppress=True)
 arm =  unitree_arm_interface.ArmInterface(hasGripper=True)
 armState = unitree_arm_interface.ArmFSMState
