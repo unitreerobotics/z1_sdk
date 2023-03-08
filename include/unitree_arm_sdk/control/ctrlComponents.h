@@ -11,6 +11,7 @@
 namespace UNITREE_ARM {
 struct CtrlComponents{
 public:
+    CtrlComponents();
     CtrlComponents(double deltaT, bool hasUnitreeGripper);
     ~CtrlComponents();
 /*
@@ -45,8 +46,7 @@ public:
     RecvState recvState; // the arm state receive from udp
     ArmFSMState statePast;
     ArmModel* armModel;
-private:
-    UDPPort *_udp;
+    UDPPort *udp;
 };
 
 }

@@ -1,5 +1,10 @@
 #pragma once
 
+/*
+ * Adapted from modern_robotics.py provided by modernrobotics.org
+ * Provides useful Jacobian and frame representation functions
+ */
+
 #include <vector>
 #include "unitree_arm_sdk/math/mathTools.h"
 

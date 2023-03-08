@@ -7,7 +7,13 @@ namespace UNITREE_ARM {
 
 class unitreeArm{
 public:
+
+// few variable is set, the other need to be set manually
+// includes: dt, udp, armModel
 unitreeArm(bool hasUnitreeGripper);
+
+// the parameters set to default
+unitreeArm(CtrlComponents *ctrlComp);
 ~unitreeArm();
 
 
