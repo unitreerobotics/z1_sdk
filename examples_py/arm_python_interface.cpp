@@ -40,8 +40,17 @@ PYBIND11_MODULE(unitree_arm_interface, m){
         .def("getQTau", &LowlevelState::getTau, rvp::reference_internal)
         ;
 
+   py::class_<UDPPort>(m, "UDPPort")
+            .def(py::init<std::string, uint, uint>(),
+                    py::arg("IP") = "127.0.0.1",
+                    py::arg("toPort") = 8071,
+                    py::arg("ownPort") = 8072
+                    )
+            ;
+
     py::class_<CtrlComponents>(m, "CtrlComponents")
         .def_readwrite("armModel", &CtrlComponents::armModel)
+        .def_readwrite("udp", &CtrlComponents::udp)
         .def_readonly("dt", &CtrlComponents::dt)
         ;
 
