@@ -21,16 +21,16 @@ void Z1ARM::armCtrlByFSM() {
     
     std::cout << "[MOVEJ]" << std::endl;
     posture[0]<<0.5,0.1,0.1,0.5,-0.2,0.5;
-    MoveJ(posture[0], 0, 1.0);
+    MoveJ(posture[0], 0, 2.0);
 
     std::cout << "[MOVEL]" << std::endl;
     posture[0] << 0,0,0,0.45,-0.2,0.2;
-    MoveL(posture[0], 0, 0.3);
+    MoveL(posture[0], 0, 0.5);
 
     std::cout << "[MOVEC]" << std::endl;
     posture[0] << 0,0,0,0.45,0,0.4;
     posture[1] << 0,0,0,0.45,0.2,0.2;
-    MoveC(posture[0], posture[1], 0, 0.3);
+    MoveC(posture[0], posture[1], 0, 0.5);
 }
 
 void Z1ARM::armCtrlInJointCtrl(){
@@ -39,7 +39,7 @@ void Z1ARM::armCtrlInJointCtrl(){
 
     for(int i(0); i<1000;i++){
         directions<< 0, 0, 0, -1, 0, 0, -1;
-        jointCtrlCmd(directions, 0.5);
+        jointCtrlCmd(directions, 1.0);
         usleep(_ctrlComp->dt*1000000);
     }
 }
@@ -50,7 +50,7 @@ void Z1ARM::armCtrlInCartesian(){
     
     for(int i(0); i<2000;i++){
         directions<< 0, 0, 0, 0, 0, -1, -1;
-        cartesianCtrlCmd(directions, 0.3, 0.1);
+        cartesianCtrlCmd(directions, 0.3, 0.2);
         usleep(_ctrlComp->dt*1000000);
     }
 }
