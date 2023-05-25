@@ -7,6 +7,7 @@
 #include <string.h>
 #include <vector>
 #include "unitree_arm_sdk/utilities/timer.h"
+#include <chrono>
 
 namespace UNITREE_ARM {
 enum class BlockYN{
@@ -53,7 +54,8 @@ private:
     int _on = 1;
     size_t _sentLength;
     fd_set _rSet;
-};
+    std::chrono::steady_clock::time_point last_recv_time_;
+};  
 }
 
 

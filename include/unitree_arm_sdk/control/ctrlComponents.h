@@ -22,29 +22,13 @@ public:
  *              and call udp->recv() to store datas from z1_ctrl into lowstate
  */
     void sendRecv();
-/*
- * Function: Set six joints commands to class lowcmd
- * Input:    q:  joint angle
- *           qd: joint velocity
- *           tau: joint (Only used in State_LOWCMD)
- * Output:   None
- */
-    void armCtrl(Vec6 q, Vec6 qd, Vec6 tau);
-/*
- * Function: Set gripper commands to class lowcmd
- * Input:    q:  joint angle
- *           qd: joint velocity
- *           tau: joint (Only used in State_LOWCMD)
- * Output:   None
- */
-    void gripperCtrl(double gripperPos, double gripperW, double gripperTau);
+
 
     LowlevelCmd *lowcmd;
     LowlevelState *lowstate;
     double dt;// default: 0.002
     SendCmd sendCmd; // udp command to control the arm
     RecvState recvState; // the arm state receive from udp
-    ArmFSMState statePast;
     ArmModel* armModel;
     UDPPort *udp;
 };

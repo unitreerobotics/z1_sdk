@@ -223,7 +223,6 @@ void setWait(bool Y_N);
  */
 void jointCtrlCmd(Vec7 directions, double jointSpeed);
 
-
 /*
  * Function: set spatial velocity command automatically by input parameters
  * Input:    directions: movement directions [include gripper], range:[-1,1]
@@ -246,6 +245,35 @@ void jointCtrlCmd(Vec7 directions, double jointSpeed);
  */
 void cartesianCtrlCmd(Vec7 directions, double oriSpeed, double posSpeed);
 
+
+/*
+ * Function: Set six joints commands to class lowcmd
+ * Input:    q:  joint angle
+ *           qd: joint velocity
+ *           tau: joint (Only used in State_LOWCMD)
+ * Output:   None
+ */
+void setArmCmd(Vec6 q, Vec6 qd, Vec6 tau = Vec6::Zero())
+{
+    lowcmd->setQ(q);
+    lowcmd->setQd(qd);
+    lowcmd->setTau(tau);
+}
+
+
+/*
+ * Function: Set gripper commands to class lowcmd
+ * Input:    q:  joint angle
+ *           qd: joint velocity
+ *           tau: joint (Only used in State_LOWCMD)
+ * Output:   None
+ */
+void setGripperCmd(double gripperPos, double gripperW, double gripperTau = 0.)
+{
+    lowcmd->setGripperQ(gripperPos);
+    lowcmd->setGripperQd(gripperW);
+    lowcmd->setGripperTau(gripperTau);
+}
 
 //command parameters
 Vec6 q, qd, tau;
