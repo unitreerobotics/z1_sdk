@@ -10,27 +10,34 @@ public:
     void armCtrlInJointCtrl();
     void armCtrlInCartesian();
     void printState();
+
+    double gripper_pos = 0.0;
+    double joint_speed = 2.0;
+    double cartesian_speed = 0.5;
 };
 
  
 void Z1ARM::armCtrlByFSM() {
     Vec6 posture[2];
+    gripper_pos = 0.0;
 
     std::cout << "[TO STATE]" << std::endl;
     labelRun("forward");
     
     std::cout << "[MOVEJ]" << std::endl;
     posture[0]<<0.5,0.1,0.1,0.5,-0.2,0.5;
-    MoveJ(posture[0], 0, 2.0);
+    joint_speed = 2.0;
+    MoveJ(posture[0], gripper_pos, joint_speed);
 
     std::cout << "[MOVEL]" << std::endl;
     posture[0] << 0,0,0,0.45,-0.2,0.2;
-    MoveL(posture[0], 0, 0.5);
+    cartesian_speed = 0.5;
+    MoveL(posture[0], gripper_pos, cartesian_speed);
 
     std::cout << "[MOVEC]" << std::endl;
     posture[0] << 0,0,0,0.45,0,0.4;
     posture[1] << 0,0,0,0.45,0.2,0.2;
-    MoveC(posture[0], posture[1], 0, 0.5);
+    MoveC(posture[0], posture[1], gripper_pos, cartesian_speed);
 }
 
 void Z1ARM::armCtrlInJointCtrl(){
@@ -39,7 +46,8 @@ void Z1ARM::armCtrlInJointCtrl(){
 
     for(int i(0); i<1000;i++){
         directions<< 0, 0, 0, -1, 0, 0, -1;
-        jointCtrlCmd(directions, 1.0);
+        joint_speed = 1.0;
+        jointCtrlCmd(directions, joint_speed);
         usleep(_ctrlComp->dt*1000000);
     }
 }
@@ -48,9 +56,12 @@ void Z1ARM::armCtrlInCartesian(){
     labelRun("forward");
     startTrack(ArmFSMState::CARTESIAN);
     
+    double angular_vel = 0.3;
+    double linear_vel = 0.3;
     for(int i(0); i<2000;i++){
         directions<< 0, 0, 0, 0, 0, -1, -1;
-        cartesianCtrlCmd(directions, 0.3, 0.2);
+
+        cartesianCtrlCmd(directions, angular_vel, linear_vel);
         usleep(_ctrlComp->dt*1000000);
     }
 }
