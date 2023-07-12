@@ -19,18 +19,33 @@ public:
         setFsm(ArmFSMState::LOWCMD);
         sendRecvThread->shutdown();
     }
+    ArmFSMState getCurrentState()
+    {
+        return _ctrlComp->recvState.state;
+    }
 };
 
 namespace py = pybind11;
 PYBIND11_MODULE(unitree_arm_interface, m){
     using rvp = py::return_value_policy;
 
+    m.def("postureToHomo", &postureToHomo);
+    m.def("homoToPosture", &homoToPosture);
+
     py::enum_<ArmFSMState>(m, "ArmFSMState")
         .value("INVALID", ArmFSMState::INVALID)
         .value("PASSIVE", ArmFSMState::PASSIVE)
-        .value("LOWCMD", ArmFSMState::LOWCMD)
         .value("JOINTCTRL", ArmFSMState::JOINTCTRL)
         .value("CARTESIAN", ArmFSMState::CARTESIAN)
+        .value("MOVEJ", ArmFSMState::MOVEJ)
+        .value("MOVEC", ArmFSMState::MOVEC)
+        .value("MOVEL", ArmFSMState::MOVEL)
+        .value("TEACH", ArmFSMState::TEACH)
+        .value("TEACHREPEAT", ArmFSMState::TEACHREPEAT)
+        .value("TOSTATE", ArmFSMState::TOSTATE)
+        .value("SAVESTATE", ArmFSMState::SAVESTATE)
+        .value("TRAJECTORY", ArmFSMState::TRAJECTORY)
+        .value("LOWCMD", ArmFSMState::LOWCMD)
         ;
 
     py::class_<LowlevelState>(m, "LowlevelState")
@@ -48,9 +63,6 @@ PYBIND11_MODULE(unitree_arm_interface, m){
     py::class_<Z1Model>(m, "Z1Model")
         .def(py::init<Vec3, double, Vec3, Mat3>())
         .def("checkInSingularity", &Z1Model::checkInSingularity)
-        // Pass-by-reference does not work in this method. 
-        // [incompatible function arguments.] Z1Model.jointProtect(arm.q, arm.qd)
-        //.def("jointProtect", &Z1Model::jointProtect) 
         .def("jointProtect", [](Z1Model& self, Vec6 q, Vec6 qd){
             self.jointProtect(q, qd);
             return std::make_pair(q, qd);
@@ -84,6 +96,7 @@ PYBIND11_MODULE(unitree_arm_interface, m){
         .def_readwrite("lowstate", &ArmInterface::lowstate)
         .def_readwrite("_ctrlComp", &ArmInterface::_ctrlComp)
         .def("setFsmLowcmd", &ArmInterface::setFsmLowcmd)
+        .def("getCurrentState", &ArmInterface::getCurrentState)
         .def("loopOn", &ArmInterface::loopOn)
         .def("loopOff", &ArmInterface::loopOff)
         .def("setFsm", &ArmInterface::setFsm)
@@ -104,5 +117,7 @@ PYBIND11_MODULE(unitree_arm_interface, m){
         .def("setWait", &ArmInterface::setWait)
         .def("jointCtrlCmd", &ArmInterface::jointCtrlCmd)
         .def("cartesianCtrlCmd", &ArmInterface::cartesianCtrlCmd)
+        .def("setArmCmd", &ArmInterface::setArmCmd)
+        .def("setGripperCmd", &ArmInterface::setGripperCmd)
         ;
 }

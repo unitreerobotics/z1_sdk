@@ -20,6 +20,9 @@ for i in range(0, duration):
     arm.qd = (targetPos-lastPos)/(duration*0.002) # set velocity
     arm.tau = armModel.inverseDynamics(arm.q, arm.qd, np.zeros(6), np.zeros(6)) # set torque
     arm.gripperQ = -1*(i/duration)
+
+    arm.setArmCmd(arm.q, arm.qd, arm.tau)
+    arm.setGripperCmd(arm.gripperQ, arm.gripperQd, arm.gripperTau)
     arm.sendRecv()# udp connection
     # print(arm.lowstate.getQ())
     time.sleep(arm._ctrlComp.dt)
