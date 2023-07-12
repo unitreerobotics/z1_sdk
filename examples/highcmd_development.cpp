@@ -1,6 +1,7 @@
 #include "unitree_arm_sdk/control/unitreeArm.h"
 
-int main(){
+int main()
+{
     UNITREE_ARM::unitreeArm arm(true);
     arm.sendRecvThread->start();
     arm.backToStart();
@@ -11,11 +12,12 @@ int main(){
     lastPos = arm.lowstate->getQ();
     targetPos << 0.0, 1.5, -1.0, -0.54, 0.0, 0.0;
 
+    UNITREE_ARM::Timer timer(arm._ctrlComp->dt);
     for(int i=0; i<duration; i++)
     {
         arm.q = lastPos*(1-i/duration) + targetPos*(i/duration);
         arm.qd = (targetPos-lastPos)/(duration*arm._ctrlComp->dt);
-        usleep(2000);
+        timer.sleep();
     }
 
     arm.backToStart();

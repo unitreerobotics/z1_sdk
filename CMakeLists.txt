@@ -22,6 +22,7 @@ foreach(EXAMPLE_FILE IN LISTS EXAMPLES_FILES)
 endforeach()
 
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 find_package(pybind11 QUIET)
 if(${pybind11_FOUND})
   pybind11_add_module(unitree_arm_interface examples_py/arm_python_interface.cpp)

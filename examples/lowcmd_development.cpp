@@ -2,38 +2,10 @@
 
 using namespace UNITREE_ARM;
 
-class Z1ARM : public unitreeArm{
-public:
-    Z1ARM():unitreeArm(true){
-        runThread = new LoopFunc("Z1LowCmd", 0.002, boost::bind(&Z1ARM::run, this));
-    };
-    ~Z1ARM(){delete runThread;};
-    void run();
-    LoopFunc *runThread;
-
-    double direction;
-    double velocity = 0.5;
-};
-
-void Z1ARM::run(){
-    tau(0) = direction*3.;// torque
-    q(1) += direction*_ctrlComp->dt*velocity;// hybrid, q & qd
-    qd(1) = direction*velocity;
-    q(2) -= direction*_ctrlComp->dt*velocity;
-    qd(2) = direction*velocity;
-    q(4) += direction*_ctrlComp->dt*velocity;// position
-    qd(5) = direction*1.5;// velocity
-    // gripper, if arm doesn't has gripper, it does noting.
-    gripperQ -= direction*_ctrlComp->dt*velocity;
-    Vec6 gTemp = _ctrlComp->armModel->inverseDynamics(q, qd, Vec6::Zero(), Vec6::Zero());
-    gTemp(0) = tau(0);
-    tau = gTemp;
-    sendRecv();
-}
-
 int main(int argc, char *argv[]) {
     std::cout << std::fixed << std::setprecision(3);
-    Z1ARM arm;
+    bool hasGripper = true;
+    unitreeArm arm(hasGripper);
     arm.sendRecvThread->start();
 
     arm.backToStart();
@@ -43,26 +15,27 @@ int main(int argc, char *argv[]) {
     std::vector<double> KP, KW;
     KP = arm._ctrlComp->lowcmd->kp;
     KW = arm._ctrlComp->lowcmd->kd;
-
-    // torque, only T
-    KP.at(0) = 0.0;
-    KW.at(0) = 0.0;
-    // position, only kp
-    KW.at(4) = 0.0;
-    // velocity, only kd
-    KP.at(5) = 0.0;
     arm._ctrlComp->lowcmd->setControlGain(KP, KW);
     arm.sendRecvThread->shutdown();
-    arm.runThread->start();// using runThread instead of sendRecvThread
 
-    for(int i(0); i<1000; i++){
-        // The robot arm will have vibration due to the rigid impact of the speed
-        // when the direction changes
-        arm.direction = i < 600 ? 1. : -1.;
-        usleep(arm._ctrlComp->dt*1000000);
+    Vec6 initQ = arm.lowstate->getQ();
+
+    double duration = 1000;
+    Vec6 targetQ;
+    targetQ << 0, 1.5, -1, -0.54, 0, 0;
+    Timer timer(arm._ctrlComp->dt);
+    for(int i(0); i<duration; i++){
+        arm.q = initQ * (1-i/duration) + targetQ * (i/duration);
+        arm.qd = (targetQ - initQ) / (duration * arm._ctrlComp->dt);
+        arm.tau = arm._ctrlComp->armModel->inverseDynamics(arm.q, arm.qd, Vec6::Zero(), Vec6::Zero());
+        arm.gripperQ = -(i/duration);
+        
+        arm.setArmCmd(arm.q, arm.qd, arm.tau);
+        arm.setGripperCmd(arm.gripperQ, arm.gripperW, arm.gripperTau);
+        arm.sendRecv();
+        timer.sleep();
     }
 
-    arm.runThread->shutdown();
     arm.sendRecvThread->start();
 
     arm.setFsm(ArmFSMState::JOINTCTRL);

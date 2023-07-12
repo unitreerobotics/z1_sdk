@@ -44,11 +44,12 @@ void Z1ARM::armCtrlInJointCtrl(){
     labelRun("forward");
     startTrack(ArmFSMState::JOINTCTRL);
 
+    Timer timer(_ctrlComp->dt);
     for(int i(0); i<1000;i++){
         directions<< 0, 0, 0, -1, 0, 0, -1;
         joint_speed = 1.0;
         jointCtrlCmd(directions, joint_speed);
-        usleep(_ctrlComp->dt*1000000);
+        timer.sleep();
     }
 }
 
@@ -58,11 +59,12 @@ void Z1ARM::armCtrlInCartesian(){
     
     double angular_vel = 0.3;
     double linear_vel = 0.3;
+    Timer timer(_ctrlComp->dt);
     for(int i(0); i<2000;i++){
         directions<< 0, 0, 0, 0, 0, -1, -1;
 
         cartesianCtrlCmd(directions, angular_vel, linear_vel);
-        usleep(_ctrlComp->dt*1000000);
+        timer.sleep();
     }
 }
 
