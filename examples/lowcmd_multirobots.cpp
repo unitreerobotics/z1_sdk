@@ -45,20 +45,26 @@ int main()
     targetQ << 1, 0, 0, 0, 0, 0;
     int duration = 1000;
 
+    Timer timer(0.002);
     for(int i(0); i<duration; i++)
     {
         //robot1
         arm1->q = lastArm1Q*(1-(double)i/duration) + targetQ*((double)i/duration);
         arm1->qd = (targetQ-lastArm1Q)/(duration*0.002);
         arm1->tau.setZero();
+        arm1->setArmCmd(arm1->q, arm1->qd, arm1->tau);
+        arm1->setGripperCmd(arm1->gripperQ, arm1->gripperW, arm1->gripperTau);
+
         //robot2
         arm2->q = lastArm2Q*(1-(double)i/duration) + targetQ*((double)i/duration);
         arm2->qd = (targetQ-lastArm1Q)/(duration*0.002);
         arm2->tau.setZero();
+        arm2->setArmCmd(arm2->q, arm2->qd, arm2->tau);
+        arm2->setGripperCmd(arm2->gripperQ, arm2->gripperW, arm2->gripperTau);
 
         arm1->sendRecv();
         arm2->sendRecv();
-        usleep(2000);
+        timer.sleep();
     }
 
     delete arm1;
