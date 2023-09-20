@@ -17,6 +17,7 @@ int main()
     {
         arm.q = lastPos*(1-i/duration) + targetPos*(i/duration);
         arm.qd = (targetPos-lastPos)/(duration*arm._ctrlComp->dt);
+        arm.setArmCmd(arm.q, arm.qd);
         timer.sleep();
     }
 
