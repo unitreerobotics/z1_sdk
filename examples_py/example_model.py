@@ -4,8 +4,10 @@ import unitree_arm_interface
 import numpy as np
 
 np.set_printoptions(precision=3, suppress=True)
-arm =  unitree_arm_interface.ArmInterface(hasGripper = True)
-armModel = arm._ctrlComp.armModel
+arm =  unitree_arm_interface.ArmInterface(hasGripper=True)
+ctrlComp = arm._ctrlComp
+udp = unitree_arm_interface.UDPPort(IP = "127.0.0.1", toPort=8071, ownPort=8072)
+ctrlComp.udp = udp
 
 print('--------------------------FK & IK------------------------')
 q_FORWARD = np.array([0, 1.5, -1, 0.54, 0, 0])
