@@ -58,7 +58,7 @@ void labelSave(std::string label);
 
 
 /*
- * Function: Save current position as a label to saveArmStates.csv
+ * Function: Teach trajectory will be save as Traj_label.csv in directory z1_controller/config/
  *           Switch to State_JointCtrl when done
  * Input:    label
  *           name to save, which shouldn't exist in z1_controller/config/saveArmStates.csv.
@@ -69,7 +69,7 @@ void teach(std::string label);
 
 
 /*
- * Function: Switch to State_Teach
+ * Function: Play back the Traj
  * Input:    label
  *           Teach trajectory will be save as Traj_label.csv in directory z1_controller/config/
  *           The number of characters in label cannot be greater than 10.(char name[10])
