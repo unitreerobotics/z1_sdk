@@ -52,7 +52,7 @@ PYBIND11_MODULE(unitree_arm_interface, m){
         .def("getQ", &LowlevelState::getQ, rvp::reference_internal)
         .def("getQd", &LowlevelState::getQd, rvp::reference_internal)
         .def("getQdd", &LowlevelState::getQdd, rvp::reference_internal)
-        .def("getQTau", &LowlevelState::getTau, rvp::reference_internal)
+        .def("getTau", &LowlevelState::getTau, rvp::reference_internal)
         ;
 
     py::class_<CtrlComponents>(m, "CtrlComponents")
