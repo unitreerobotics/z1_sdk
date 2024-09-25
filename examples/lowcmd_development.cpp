@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
     KP = arm._ctrlComp->lowcmd->kp;
     KW = arm._ctrlComp->lowcmd->kd;
     arm._ctrlComp->lowcmd->setControlGain(KP, KW);
+    // arm._ctrlComp->lowcmd->setGripperGain(KP[KP.size()-1], KW[KW.size()-1]);
     arm.sendRecvThread->shutdown();
 
     Vec6 initQ = arm.lowstate->getQ();
