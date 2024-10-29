@@ -59,7 +59,7 @@ Mat6 CalcJacobian(Vec6 q);
  * Inputs: q: joint angles
  *         qd: joint velocities
  *         qdd: joint accelerations
- *         Ftip: Spatial force applied by the end-effector
+ *         Ftip: Spatial force applied by the end-effector [rpyxyz]
  * Returns: required joint forces/torques
  */
 Vec6 inverseDynamics(Vec6 q, Vec6 qd, Vec6 qdd, Vec6 Ftip);
