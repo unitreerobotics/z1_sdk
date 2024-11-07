@@ -27,7 +27,7 @@ print(hasIK, '\n')
 
 print('--------------------------ID------------------------')
 tau = armModel.inverseDynamics(np.zeros(6), np.zeros(6), np.zeros(6), np.zeros(6))
-print("The torque required by the z1 arm at the homo position to resist gravity:")
+print("The torque required by the z1 arm at the home position to resist gravity:")
 print(tau, '\n')
 
 print('--------------------------jacobian------------------------')
