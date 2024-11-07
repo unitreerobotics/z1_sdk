@@ -8,6 +8,10 @@ np.set_printoptions(precision=3, suppress=True)
 print("Press ctrl+\ to quit process.")
 
 arm =  unitree_arm_interface.ArmInterface(hasGripper=True)
+ctrlComp = arm._ctrlComp
+udp = unitree_arm_interface.UDPPort(IP = "127.0.0.1", toPort=8071, ownPort=8072)
+ctrlComp.udp = udp
+
 armState = unitree_arm_interface.ArmFSMState
 arm.loopOn()
 
