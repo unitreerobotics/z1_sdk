@@ -9,7 +9,7 @@ np.set_printoptions(precision=3, suppress=True)
 You can use fastapi to encapsulate z1_sdk for http interface call.
 """
 
-arm =  unitree_arm_interface.ArmInterface(hasGripper=True)
+arm =  unitree_arm_interface.ArmInterface("127.0.0.1", 8073, 8074)
 
 from fastapi import FastAPI
 from pydantic import BaseModel

@@ -7,7 +7,7 @@ np.set_printoptions(precision=3, suppress=True)
 
 print("Press ctrl+\ to quit process.")
 
-arm =  unitree_arm_interface.ArmInterface(hasGripper=True)
+arm =  unitree_arm_interface.ArmInterface("127.0.0.1", 8073, 8074)
 armState = unitree_arm_interface.ArmFSMState
 arm.loopOn()
 
