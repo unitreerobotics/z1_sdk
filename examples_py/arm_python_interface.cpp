@@ -8,7 +8,8 @@ using namespace UNITREE_ARM;
 class ArmInterface : public unitreeArm
 {
 public:
-    ArmInterface(bool hasGripper):unitreeArm(hasGripper){};
+    // ArmInterface(bool hasGripper):unitreeArm(hasGripper){};
+    ArmInterface(std::string IP, uint toPort, uint ownPort):unitreeArm(IP, toPort, ownPort){}
     ~ArmInterface(){};
     void loopOn() { sendRecvThread->start();}
     void loopOff() { sendRecvThread->shutdown();}
@@ -25,10 +26,22 @@ public:
     }
 };
 
+CtrlComponents* get_CtrlComponents(std::string toIP, uint toPort, uint ownPort)
+{
+    auto ctrlComp1 = new CtrlComponents();
+    ctrlComp1->dt = 0.002;//500HZ
+    ctrlComp1->udp = new UDPPort(toIP, toPort, ownPort, RECVSTATE_LENGTH, BlockYN::NO, 500000);
+    ctrlComp1->armModel = new Z1Model(Vec3(0.0382, 0.0, 0.0),0.80225,
+        Vec3(0.0037, 0.0014, -0.0003), Vec3(0.00057593, 0.00099960, 0.00106337).asDiagonal());
+    ctrlComp1->armModel->addLoad(0.03);// add 0.03kg payload to the end joint
+    return ctrlComp1;
+}
+
 namespace py = pybind11;
 PYBIND11_MODULE(unitree_arm_interface, m){
     using rvp = py::return_value_policy;
 
+    m.def("get_CtrlComponents", &get_CtrlComponents);
     m.def("postureToHomo", &postureToHomo);
     m.def("homoToPosture", &homoToPosture);
 
@@ -58,6 +71,7 @@ PYBIND11_MODULE(unitree_arm_interface, m){
 
     py::class_<CtrlComponents>(m, "CtrlComponents")
         .def_readwrite("armModel", &CtrlComponents::armModel)
+        .def_readwrite("udp", &CtrlComponents::udp)
         .def_readonly("dt", &CtrlComponents::dt)
         ;
 
@@ -87,7 +101,8 @@ PYBIND11_MODULE(unitree_arm_interface, m){
         ;
 
     py::class_<ArmInterface>(m, "ArmInterface")
-        .def(py::init<bool>(), py::arg("hasGripper")=true)
+        // .def(py::init<bool>(), py::arg("hasGripper")=true)
+        .def(py::init<std::string, uint, uint>())
         .def_readwrite("q", &ArmInterface::q)
         .def_readwrite("qd", &ArmInterface::qd)
         .def_readwrite("tau", &ArmInterface::tau)
@@ -95,6 +110,7 @@ PYBIND11_MODULE(unitree_arm_interface, m){
         .def_readwrite("gripperQd", &ArmInterface::gripperW)
         .def_readwrite("gripperTau", &ArmInterface::gripperTau)
         .def_readwrite("lowstate", &ArmInterface::lowstate)
+        .def_readwrite("lowcmd", &ArmInterface::lowcmd)
         .def_readwrite("_ctrlComp", &ArmInterface::_ctrlComp)
         .def("setFsmLowcmd", &ArmInterface::setFsmLowcmd)
         .def("getCurrentState", &ArmInterface::getCurrentState)

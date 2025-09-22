@@ -14,6 +14,7 @@ unitreeArm(bool hasUnitreeGripper);
 
 // the parameters set to default
 unitreeArm(CtrlComponents *ctrlComp);
+unitreeArm(std::string IP, uint toPort, uint ownPort);
 ~unitreeArm();
 
 
